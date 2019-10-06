@@ -1,0 +1,15 @@
+{
+    "centerfragments": false,
+    "cssclasses": false,
+    "defaultlangperdeck": false,
+    "deckdefaultlang": {},
+    "defaultlang": "Python 3",
+    "favorites": ["Python 3", 
+        "HTML", 
+        "CSS", 
+        "JavaScript"
+    ],
+    "hotkey": "Alt+s",
+    "linenos": false,
+    "style": "default"
+}
