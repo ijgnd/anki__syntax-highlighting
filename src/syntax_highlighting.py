@@ -1,11 +1,13 @@
 """
-Add-on for Anki 2.1 "Code Formatter (Syntax Highlighting Fork)"
+Add-on for Anki 2.1 "Syntax Highlighting FORK"
 
 Copyright: (c) 2012-2015 Tiago Barroso <https://github.com/tmbb>
            (c) 2015 Tim Rae <https://github.com/timrae>
            (c) 2018 Glutanimate <https://glutanimate.com/>
            (c) 2018 Rene Schallner
            (c) 2019 ijgnd
+
+Use this at your own risk.
 
 License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
 """
@@ -121,16 +123,6 @@ def showError(msg, parent):
 
 
 def get_deck_name(editor):
-    # doesn't work
-    """
-    deck_name = None
-    try:
-        deck_name = mw.col.decks.current()['name']
-    except AttributeError:
-        # No deck opened?
-        deck_name = None
-    return deck_name
-    """
     if isinstance(editor.parentWindow, aqt.addcards.AddCards):
         return editor.parentWindow.deckChooser.deckName()
     elif isinstance(editor.parentWindow, (aqt.browser.Browser, aqt.editcurrent.EditCurrent)):
@@ -230,6 +222,37 @@ QMenu::item:selected {
 """
 
 
+class keyFilter(QObject):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.parent = parent
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.KeyPress:
+            if event.key() == Qt.Key_Space:
+                self.parent.alternative_keys(self.parent, Qt.Key_Return)
+                return True
+            elif event.key() == Qt.Key_T:
+                self.parent.alternative_keys(self.parent, Qt.Key_Left)
+                return True
+            elif event.key() == Qt.Key_B:
+                self.parent.alternative_keys(self.parent, Qt.Key_Down)
+                return True
+            elif event.key() == Qt.Key_G:
+                self.parent.alternative_keys(self.parent, Qt.Key_Up)
+                return True
+            # elif event.key() == :
+            #     self.parent.alternative_keys(self.parent, Qt.Key_Right)
+            #     return True
+        return False
+
+
+def alternative_keys(self, key):
+    # https://stackoverflow.com/questions/56014149/mimic-a-returnpressed-signal-on-qlineedit
+    keyEvent = QKeyEvent(QEvent.KeyPress, key, Qt.NoModifier)
+    QCoreApplication.postEvent(self, keyEvent)
+
+
 def onAll(editor, code):
     d = FilterDialog(editor.parentWindow, LANG_MAP)
     if d.exec():
@@ -249,19 +272,29 @@ def openHelperMenu(editor):
         clipboard = QApplication.clipboard()
         code = clipboard.text()
 
-    menu = QMenu(editor.mw)
+    menu = QMenu(editor.widget)
     menu.setStyleSheet(basic_stylesheet)
     # add small info if pasting
     label = QLabel("selection" if selected_text else "paste")
-    action = QWidgetAction(editor.mw)
+    action = QWidgetAction(editor.widget)
     action.setDefaultWidget(label)
     menu.addAction(action)
+
+    menu.alternative_keys = alternative_keys
+    kfilter = keyFilter(menu)
+    menu.installEventFilter(kfilter)
+
     d = menu.addAction("&default (%s)" % get_default_lang(editor))
     d.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LANG_MAP[get_default_lang(editor)]))
     if LASTUSED:
         l = menu.addAction("l&ast used")
         l.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LASTUSED))
+
     favmenu = menu.addMenu('&favorites')
+    favfilter = keyFilter(favmenu)
+    favmenu.installEventFilter(favfilter)
+    favmenu.alternative_keys = alternative_keys
+
     a = menu.addAction("&select from all")
     a.triggered.connect(lambda _, a=editor, c=code: onAll(a, c))
     for e in gc("favorites"):
