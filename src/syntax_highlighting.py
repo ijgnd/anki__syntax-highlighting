@@ -166,9 +166,10 @@ def hilcd(ed, code, langAlias):
         return False
 
     try:
+        # http://pygments.org/docs/formatters/#HtmlFormatter
         my_formatter = HtmlFormatter(
             linenos=linenos, noclasses=noclasses,
-            font_size=16, style=gc("style"))
+            font_size=16, style=gc("style"), lineseparator="<br>", wrapcode=True)
     except ClassNotFound as e:
         print(e)
         showError(ERR_STYLE, parent=ed.parentWindow)
@@ -300,6 +301,7 @@ def openHelperMenu(editor):
     for e in gc("favorites"):
         a = favmenu.addAction(e)
         a.triggered.connect(lambda _, a=editor, c=code, l=LANG_MAP[e]: hilcd(a, c, l))
+    menu.setActiveAction(d)
     menu.exec_(QCursor.pos())
 
 
