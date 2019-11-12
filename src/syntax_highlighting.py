@@ -4,8 +4,10 @@ Add-on for Anki 2.1 "Syntax Highlighting FORK"
 Copyright: (c) 2012-2015 Tiago Barroso <https://github.com/tmbb>
            (c) 2015 Tim Rae <https://github.com/timrae>
            (c) 2018 Glutanimate <https://glutanimate.com/>
+           (c) 2019 anonymous (creator of "Mini Format Pack Supplementary", https://ankiweb.net/shared/info/476705431)
            (c) 2018 Rene Schallner
            (c) 2019 ijgnd
+           (c) 2019 anonymous, https://ankiweb.net/shared/info/476705431
 
 Use this at your own risk.
 
@@ -36,6 +38,7 @@ from anki.hooks import addHook, wrap
 # from .selector_dialog import FilterDialog
 from .fuzzy_panel import FilterDialog
 from .settings import MyConfigWindow
+from .supplementary import wrap_in_tags
 
 
 def gc(arg, fail=False):
@@ -157,6 +160,11 @@ def hilcd(ed, code, langAlias):
         centerfragments ^= True
     if (ed.mw.app.keyboardModifiers() & Qt.AltModifier):
         noclasses ^= True
+    inline = False
+    if (ed.mw.app.keyboardModifiers() & Qt.MetaModifier):
+        inline = True
+    if inline:
+        linenos = False
 
     try:
         my_lexer = get_lexer_by_name(langAlias, stripall=True)
@@ -175,32 +183,40 @@ def hilcd(ed, code, langAlias):
         showError(ERR_STYLE, parent=ed.parentWindow)
         return False
 
-    if linenos:
-        if centerfragments:
-            pretty_code = "".join(["<center>",
-                                   highlight(code, my_lexer, my_formatter),
-                                   "</center><br>"])
-        else:
-            pretty_code = "".join([highlight(code, my_lexer, my_formatter),
-                                   "<br>"])
-    # to show line numbers pygments uses a table. The background color for the code
-    # highlighting is limited to this table
-    # If pygments doesn't use linenumbers it doesn't use a table. This means
-    # that the background color covers the whole width of the card.
-    # I don't like this. I didn't find an easier way than reusing the existing
-    # solution.
-    # Glutanimate removed the table in the commit
-    # https://github.com/glutanimate/syntax-highlighting/commit/afbf5b3792611ecd2207b9975309d05de3610d45
-    # which hasn't been published on Ankiweb in 2019-10-02.
+    if inline:
+        pretty_code = "".join([highlight(code, my_lexer, my_formatter), "<br>"])
+        replacements = {
+            '<div class="highlight"': '<span class="highlight"',
+            "<pre": "<code",
+            "</pre></div>": "</code></span>",
+            "<br>": "",
+            "</br>": "",
+            "</ br>": "",
+            "<br />": "",
+            'style="line-height: 125%"': 'style="line-height: 100%"',
+        }
+        for k, v in replacements.items():
+            pretty_code = pretty_code.replace(k, v)
     else:
-        if centerfragments:
-            pretty_code = "".join(["<center><table><tbody><tr><td>",
-                                   highlight(code, my_lexer, my_formatter),
-                                   "</td></tr></tbody></table></center><br>"])
+        if linenos:
+            pretty_code = "".join([highlight(code, my_lexer, my_formatter), "<br>"])
+        # to show line numbers pygments uses a table. The background color for the code
+        # highlighting is limited to this table
+        # If pygments doesn't use linenumbers it doesn't use a table. This means
+        # that the background color covers the whole width of the card.
+        # I don't like this. I didn't find an easier way than reusing the existing
+        # solution.
+        # Glutanimate removed the table in the commit
+        # https://github.com/glutanimate/syntax-highlighting/commit/afbf5b3792611ecd2207b9975309d05de3610d45
+        # which hasn't been published on Ankiweb in 2019-10-02.
         else:
             pretty_code = "".join(["<table><tbody><tr><td>",
-                                   highlight(code, my_lexer, my_formatter),
-                                   "</td></tr></tbody></table><br>"])
+                                    highlight(code, my_lexer, my_formatter),
+                                    "</td></tr></tbody></table><br>"])
+        if centerfragments:
+            pretty_code = pretty_code.replace(
+                # "<table>", "<table style='margin-left:auto; margin-right:auto;'>")
+                "<table>", "<table style='margin: 0 auto;'>")
 
     pretty_code = process_html(pretty_code)
     ed.web.eval("document.execCommand('inserthtml', false, %s);"
@@ -284,6 +300,12 @@ def openHelperMenu(editor):
     menu.alternative_keys = alternative_keys
     kfilter = keyFilter(menu)
     menu.installEventFilter(kfilter)
+
+    if gc("show pre/code", False):
+        u = menu.addAction("&unformatted (<pre>)")
+        u.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "pre"))
+        c = menu.addAction("unformatted (<&code>)")
+        c.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "code"))
 
     d = menu.addAction("&default (%s)" % get_default_lang(editor))
     d.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LANG_MAP[get_default_lang(editor)]))

@@ -37,6 +37,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="cb_showPreCode">
+       <property name="text">
+        <string>show unformatted (&lt;pre&gt;, &lt;code&gt;)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="cb_center">
        <property name="text">
         <string>center</string>

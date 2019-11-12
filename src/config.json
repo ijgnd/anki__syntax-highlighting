@@ -11,5 +11,6 @@
     ],
     "hotkey": "Alt+s",
     "linenos": false,
+    "show pre/code": false,
     "style": "default"
 }

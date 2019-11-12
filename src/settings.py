@@ -114,6 +114,7 @@ class MyConfigWindow(QDialog):
     def applyconfig(self):
         self.dialog.le_shortcut.setText(self.config['hotkey'])
         self.dialog.cb_center.setChecked(self.config['centerfragments'])
+        self.dialog.cb_showPreCode.setChecked(self.config['show pre/code'])
         self.oncsschange()
         self.dialog.cb_usecss.setChecked(self.config['cssclasses'])
         self.dialog.cb_linenum.setChecked(self.config['linenos'])
@@ -195,6 +196,7 @@ class MyConfigWindow(QDialog):
             deck, _, lang = text.rpartition('   (')
             defaultdict[deck] = lang[:-1]  # -1 because I attach ')'
         self.config = {
+            "show pre/code": self.dialog.cb_showPreCode.isChecked(),
             "centerfragments": self.dialog.cb_center.isChecked(),
             "cssclasses": self.dialog.cb_usecss.isChecked(),
             "defaultlangperdeck": self.dialog.cb_defaultlangperdeck.isChecked(),
