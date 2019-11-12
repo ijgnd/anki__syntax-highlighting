@@ -8,6 +8,7 @@ Anki 2.1 only. I removed the code I don't use. for details see the file ankiweb.
 - Copyright © 2015 [Tim Rae](https://github.com/timrae)
 - Copyright © 2018-2019 [Aristotelis P./Glutanimate](https://glutanimate.com/)
 - Copyright © 2018 [Rene Schallner](https://github.com/renerocksai/sublimeless_zk)
+- Copyright © 2019 [anonymous (creator of "Mini Format Pack Supplementary")](https://ankiweb.net/shared/info/476705431)
 - Copyright © 2019 ijgnd
 
 The following third-party open-source software is used:
