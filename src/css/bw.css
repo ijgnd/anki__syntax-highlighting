@@ -1,3 +1,10 @@
+.highlight {
+    text-align:left;
+    font-family: droid sans mono;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #ffffff; }
 .highlight .c { font-style: italic } /* Comment */
