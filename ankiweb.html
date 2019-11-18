@@ -1,11 +1,12 @@
 <b>For the original add-on <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">Syntax Highlighting for Code</a> click <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.</b> 
 <b>This add-on is a fork (modified version).</b>
 
+
 My version has a different user interface which I think is more flexible to use and easier to setup. You can e.g. ...
 - ... quickly filter all available styles.
-- ... easily make your syntax highlighting compatible with night mode : Just check two boxes in the configuration dialog (use CSS and update templates). With the original you need to install a different add-on, copy a file to your media folder and adjust all your templates manually
-- ... paste code as inline code wrapped in a "< code >" tag. To use this press "win/meta" while selecting your action from the menu. This feature mostly works which is enough for me.
-- ... paste code unformatted from the menu which I prefer over additional shortcuts I would have to remember for the SupplementaryMiniFormatPack.
+- ... easily make your syntax highlighting compatible with night mode : Just check two boxes in the configuration dialog (use CSS and update templates). With the original you need to install a different add-on, copy a file to your media folder and adjust all your templates manually. This only works if the style you use is suited to the night mode. Only the default layout is adjusted to the anki nightmode. I haven't tested other layouts.
+- ... paste code as inline code wrapped in a "&lt; code &gt;" tag. To use this press "win/meta" while selecting your action from the menu. This feature mostly works which is enough for me.
+- ... paste code unformatted from the menu which I prefer over additional shortcuts I would have to remember for the SupplementaryMiniFormatPack. Actually I reused the relevant code from this add-on for mine.
 
 If the original add-on works well for you or run into problems with my version use the original. Use my version at your own risk! This add-on works well for me but as a prudent user you have backups ...
 
@@ -13,10 +14,10 @@ If the original add-on works well for you or run into problems with my version u
 
 <a href="https://raw.githubusercontent.com/ijgnd/syntax-highlighting/master/screenshots/syntax_highlight_fork.gif" rel="nofollow">Here</a> is a screencast about the initial setup and use.
 
+<b># bugs etc.</b>
 Please do not use reviews for bug reports or support requests. I don't get notified of your reviews, and properly troubleshooting an issue through them is nearly impossible (formatting is limited and I can't reply multiple times). If you find a bug let me know on <a href="" rel="nofollow">github</a> or via reddit (/u/ijgnord). 
 
-<b># css classes</b>
-This allows to change the styling later, e.g. when I'm using night mode. Only the default layout is adjusted to the anki nightmode. I haven't tested other layouts.
+When you use the css option and the code doesn't look like expected: Make sure to check if the styling section of your card template starts with the line '@import url("_styles_for_syntax_highlighting.css");'. Then check if you have the file "_styles_for_syntax_highlighting.css" in your media folder and if it contains the css styles you want.
 
 <b># Credits and License</b>
 Copyright © 
