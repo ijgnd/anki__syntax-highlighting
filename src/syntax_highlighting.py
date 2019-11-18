@@ -22,6 +22,7 @@ import shutil
 addon_path = os.path.dirname(__file__)
 sys.path.insert(0, os.path.join(addon_path, "libs"))
 
+from bs4 import BeautifulSoup
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, get_all_lexers
 from pygments.formatters import HtmlFormatter
@@ -60,13 +61,32 @@ def set_some_paths():
 addHook("profileLoaded", set_some_paths)
 
 
+insertscript = """<script>
+function MyInsertHtml(content) {
+    var sel, range;
+    if (window.getSelection && (sel = window.getSelection()).rangeCount) {
+        range = sel.getRangeAt(0);
+        range.collapse(true);
+        var mydiv = document.createElement("div");
+        mydiv.innerHTML = content;
+        range.insertNode(mydiv);
+        // Move the caret
+        range.setStartAfter(mydiv);
+        range.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+}
+</script>
+"""
+
 def profileLoaded():
     if not os.path.isfile(cssfile):
         return False
     with open(cssfile, "r") as css_file:
         css = css_file.read()
-    editor_style = "<style>\n{}\n</style>".format(css.replace("%","%%"))
-    aqt.editor._html = editor_style + aqt.editor._html
+    editor_style = "<style>\n{}\n</style>".format(css.replace("%", "%%"))
+    aqt.editor._html = editor_style + insertscript + aqt.editor._html
 addHook("profileLoaded", profileLoaded)
 
 
@@ -213,15 +233,21 @@ def hilcd(ed, code, langAlias):
             pretty_code = "".join(["<table><tbody><tr><td>",
                                     highlight(code, my_lexer, my_formatter),
                                     "</td></tr></tbody></table><br>"])
+        soup = BeautifulSoup(pretty_code, 'html.parser')
+        tablestyling = ""
         if centerfragments:
-            pretty_code = pretty_code.replace(
-                # "<table>", "<table style='margin-left:auto; margin-right:auto;'>")
-                "<table>", "<table style='margin: 0 auto;'>")
-
-    pretty_code = process_html(pretty_code)
-    ed.web.eval("document.execCommand('inserthtml', false, %s);"
-                % json.dumps(pretty_code))
-
+            tablestyling += "margin: 0 auto;"
+        if noclasses:
+            tablestyling += "text-align: left;"
+        for t in soup.findAll("table"):
+            if t.has_attr('style'):
+                t['style'] = tablestyling + t['style']
+            else:
+                t['style'] = tablestyling
+            # del t["class"]   # class tablehighlight
+        pretty_code = str(soup)
+    out = "`" + json.dumps(pretty_code)[1:-1] + "`"
+    ed.web.eval("MyInsertHtml(%s);" % out)
     LASTUSED = langAlias
 
 
