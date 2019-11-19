@@ -245,10 +245,11 @@ def hilcd(ed, code, langAlias):
         if noclasses:
             tablestyling += "text-align: left;"
         for t in soup.findAll("table"):
-            if t.has_attr('style'):
-                t['style'] = tablestyling + t['style']
-            else:
-                t['style'] = tablestyling
+            if tablestyling:
+                if t.has_attr('style'):
+                    t['style'] = tablestyling + t['style']
+                else:
+                    t['style'] = tablestyling
             if t.has_attr('class'):
                 del t["class"]   # class tablehighlight
         for d in soup.find_all(attrs={'class': 'highlight'}):
