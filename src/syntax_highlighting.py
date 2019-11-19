@@ -27,6 +27,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, get_all_lexers
 from pygments.formatters import HtmlFormatter
 from pygments.util import ClassNotFound
+from pygments.styles import get_all_styles
 
 import aqt
 from aqt.qt import *
@@ -178,8 +179,12 @@ def hilcd(ed, code, langAlias):
         linenos ^= True
     if (ed.mw.app.keyboardModifiers() & Qt.ControlModifier):
         centerfragments ^= True
+    mystyle = gc("style")
     if (ed.mw.app.keyboardModifiers() & Qt.AltModifier):
-        noclasses ^= True
+        d = FilterDialog(parent=None, values=list(get_all_styles()))
+        if d.exec():
+            mystyle = d.selkey
+        noclasses = True
     inline = False
     if (ed.mw.app.keyboardModifiers() & Qt.MetaModifier):
         inline = True
@@ -197,7 +202,7 @@ def hilcd(ed, code, langAlias):
         # http://pygments.org/docs/formatters/#HtmlFormatter
         my_formatter = HtmlFormatter(
             linenos=linenos, noclasses=noclasses,
-            font_size=16, style=gc("style"), lineseparator="<br>", wrapcode=True)
+            font_size=16, style=mystyle, lineseparator="<br>", wrapcode=True)
     except ClassNotFound as e:
         print(e)
         showError(ERR_STYLE, parent=ed.parentWindow)
