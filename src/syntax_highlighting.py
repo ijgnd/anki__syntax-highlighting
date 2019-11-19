@@ -244,7 +244,10 @@ def hilcd(ed, code, langAlias):
                 t['style'] = tablestyling + t['style']
             else:
                 t['style'] = tablestyling
-            # del t["class"]   # class tablehighlight
+            if t.has_attr('class'):
+                del t["class"]   # class tablehighlight
+        for d in soup.find_all(attrs={'class': 'highlight'}):
+            del d["class"]
         pretty_code = str(soup)
     out = "`" + json.dumps(pretty_code)[1:-1] + "`"
     ed.web.eval("MyInsertHtml(%s);" % out)
