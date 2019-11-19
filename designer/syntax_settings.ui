@@ -111,6 +111,31 @@
       </widget>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QLabel" name="lab_Font">
+         <property name="text">
+          <string>Font</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lab_Font_selected">
+         <property name="text">
+          <string>default - unset</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_setFont">
+         <property name="text">
+          <string>Select Font</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QLabel" name="lab_style">

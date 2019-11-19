@@ -69,6 +69,7 @@ class MyConfigWindow(QDialog):
         self.templates_to_update = []
 
     def setbuttons(self):
+        self.dialog.pb_setFont.clicked.connect(self.onSelectFont)
         self.dialog.pb_setstyle.clicked.connect(self.onSelectStyle)
         self.dialog.pb_up.clicked.connect(self.onListUp)
         self.dialog.pb_down.clicked.connect(self.onListDown)
@@ -120,6 +121,8 @@ class MyConfigWindow(QDialog):
         self.dialog.cb_linenum.setChecked(self.config['linenos'])
         self.dialog.cb_defaultlangperdeck.setChecked(self.config['defaultlangperdeck'])
         self.ondeckdefaultchange()
+        if self.config['font']:
+            self.dialog.lab_Font_selected.setText(self.config['font'])
         self.dialog.lab_style_selected.setText(self.config['style'])
         self.dialog.ql_deflang.setText(self.config['defaultlang'])
 
@@ -127,6 +130,16 @@ class MyConfigWindow(QDialog):
         listwidget.clear()
         listwidget.addItems(_list)
         listwidget.repaint()
+
+    def onSelectFont(self):
+        prelim = QFontDatabase().families()
+        # remove foundry names that Qt adds
+        f = [x.split(" [")[0] for x in prelim]
+        f = list(set(f))  # remove duplicates
+        f.append('default - unset')
+        d = FilterDialog(parent=None, values=sorted(f))
+        if d.exec():
+            self.dialog.lab_Font_selected.setText(d.selkey)
 
     def onSelectStyle(self):
         d = FilterDialog(parent=None, values=list(get_all_styles()))
@@ -195,6 +208,10 @@ class MyConfigWindow(QDialog):
             text = str(self.dialog.lw_deckdefaults.item(i).text())
             deck, _, lang = text.rpartition('   (')
             defaultdict[deck] = lang[:-1]  # -1 because I attach ')'
+        if self.dialog.lab_Font_selected.text() == "default - unset":
+            myfont = ""
+        else:
+            myfont = self.dialog.lab_Font_selected.text()
         self.config = {
             "show pre/code": self.dialog.cb_showPreCode.isChecked(),
             "centerfragments": self.dialog.cb_center.isChecked(),
@@ -206,5 +223,6 @@ class MyConfigWindow(QDialog):
             "hotkey": shortcut,
             "linenos": self.dialog.cb_linenum.isChecked(),
             "style": self.dialog.lab_style_selected.text(),
+            "font": myfont,
         }
         QDialog.accept(self)

@@ -103,8 +103,10 @@ def update_templates(templatenames):
 
 def update_cssfile_in_mediafolder(style):
     sourcefile = os.path.join(cssfolder, style + ".css")
-    if os.path.isfile(sourcefile):
-        shutil.copy(sourcefile, cssfile)
+    with open(sourcefile) as f:
+        css = f.read()
+    with open(cssfile, "w") as f:
+        f.write(css % gc("font", "Droid Sans Mono"))
 
 
 def onMySettings():
@@ -262,6 +264,9 @@ def hilcd(ed, code, langAlias):
                 # In Night mode you then have unreadable white text on white background
                 d['style'] = """background-color: transparent;"""
                 del d["class"]
+            if gc('font'):
+                for t in soup.findAll("code"):
+                    t['style'] = "font-family: %s;" % gc('font')
         pretty_code = str(soup)
     out = "`" + json.dumps(pretty_code)[1:-1] + "`"
     ed.web.eval("MyInsertHtml(%s);" % out)

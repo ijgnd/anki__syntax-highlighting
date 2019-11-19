@@ -9,6 +9,7 @@
         "CSS", 
         "JavaScript"
     ],
+    "font": "",
     "hotkey": "Alt+s",
     "linenos": false,
     "show pre/code": false,
