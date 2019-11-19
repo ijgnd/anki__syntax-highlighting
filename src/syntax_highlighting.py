@@ -250,10 +250,18 @@ def hilcd(ed, code, langAlias):
                     t['style'] = tablestyling + t['style']
                 else:
                     t['style'] = tablestyling
-            if t.has_attr('class'):
-                del t["class"]   # class tablehighlight
-        for d in soup.find_all(attrs={'class': 'highlight'}):
-            del d["class"]
+            if noclasses:
+                if t.has_attr('class'):
+                    del t["class"]   # class tablehighlight
+        if noclasses:
+            for d in soup.find_all(attrs={'class': 'highlight'}):
+                # thestyle = d['style']
+                del d["class"]
+            for d in soup.find_all(attrs={'class': 'linenodiv'}):
+                # even for dark styles pygments uses a bright background color for the line numbers
+                # In Night mode you then have unreadable white text on white background
+                d['style'] = """background-color: transparent;"""
+                del d["class"]
         pretty_code = str(soup)
     out = "`" + json.dumps(pretty_code)[1:-1] + "`"
     ed.web.eval("MyInsertHtml(%s);" % out)
