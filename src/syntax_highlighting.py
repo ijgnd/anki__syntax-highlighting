@@ -81,11 +81,11 @@ function MyInsertHtml(content) {
 """
 
 def profileLoaded():
-    if not os.path.isfile(cssfile):
-        return False
-    with open(cssfile, "r") as css_file:
-        css = css_file.read()
-    editor_style = "<style>\n{}\n</style>".format(css.replace("%", "%%"))
+    editor_style = ""
+    if os.path.isfile(cssfile):
+        with open(cssfile, "r") as css_file:
+            css = css_file.read()
+            editor_style = "<style>\n{}\n</style>".format(css.replace("%", "%%"))
     aqt.editor._html = editor_style + insertscript + aqt.editor._html
 addHook("profileLoaded", profileLoaded)
 
