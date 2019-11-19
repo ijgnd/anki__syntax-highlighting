@@ -259,6 +259,9 @@ def hilcd(ed, code, langAlias):
             for d in soup.find_all(attrs={'class': 'highlight'}):
                 # thestyle = d['style']
                 del d["class"]
+            for d in soup.find_all("td"):
+                if t.has_attr('class'):
+                    del d["class"]
             for d in soup.find_all(attrs={'class': 'linenodiv'}):
                 # even for dark styles pygments uses a bright background color for the line numbers
                 # In Night mode you then have unreadable white text on white background
