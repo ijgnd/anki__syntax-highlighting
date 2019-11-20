@@ -64,19 +64,17 @@ addHook("profileLoaded", set_some_paths)
 
 insertscript = """<script>
 function MyInsertHtml(content) {
-    var sel, range;
-    if (window.getSelection && (sel = window.getSelection()).rangeCount) {
-        range = sel.getRangeAt(0);
-        range.collapse(true);
-        var mydiv = document.createElement("div");
-        mydiv.innerHTML = content;
-        range.insertNode(mydiv);
-        // Move the caret
-        range.setStartAfter(mydiv);
-        range.collapse(true);
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }
+    var s = window.getSelection();
+    var r = s.getRangeAt(0);
+    r.collapse(true);
+    var mydiv = document.createElement("div");
+    mydiv.innerHTML = content;
+    r.insertNode(mydiv);
+    // Move the caret
+    r.setStartAfter(mydiv);
+    r.collapse(true);
+    s.removeAllRanges();
+    s.addRange(r);
 }
 </script>
 """
