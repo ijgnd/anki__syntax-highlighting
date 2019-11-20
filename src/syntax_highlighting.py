@@ -327,18 +327,8 @@ def onAll(editor, code):
         hilcd(editor, code, d.selvalue)
 
 
-def openHelperMenu(editor):
+def _openHelperMenu(editor, code, selected_text):
     global LASTUSED
-
-    selected_text = editor.web.selectedText()
-    if selected_text:
-        #  Sometimes, self.web.selectedText() contains the unicode character
-        # '\u00A0' (non-breaking space). This character messes with the
-        # formatter for highlighted code.
-        code = selected_text.replace('\u00A0', ' ')
-    else:
-        clipboard = QApplication.clipboard()
-        code = clipboard.text()
 
     menu = QMenu(editor.widget)
     menu.setStyleSheet(basic_stylesheet)
@@ -376,6 +366,21 @@ def openHelperMenu(editor):
         a.triggered.connect(lambda _, a=editor, c=code, l=LANG_MAP[e]: hilcd(a, c, l))
     menu.setActiveAction(d)
     menu.exec_(QCursor.pos())
+
+
+def openHelperMenu(editor):
+    selected_text = editor.web.selectedText()
+    if selected_text:
+        #  Sometimes, self.web.selectedText() contains the unicode character
+        # '\u00A0' (non-breaking space). This character messes with the
+        # formatter for highlighted code.
+        code = selected_text.replace('\u00A0', ' ')
+        editor.web.evalWithCallback("document.execCommand('delete');", lambda 
+                                    _, e=editor, c=code: _openHelperMenu(e, c, True))
+    else:
+        clipboard = QApplication.clipboard()
+        code = clipboard.text()
+        _openHelperMenu(editor, code, False)
 
 
 def editorContextMenu(ewv, menu):
