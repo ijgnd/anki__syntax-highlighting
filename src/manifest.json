@@ -1,5 +1,5 @@
 {
-    "package":"1972239816",
-    "name": "syntax highlighting FORK"
+    "conflicts": ["1463041493"],
+    "name": "syntax highlighting FORK",
+    "package":"1972239816"
 }
- 
