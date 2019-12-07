@@ -9,7 +9,7 @@ from .forms import syntax_settings
 from .forms import deck_default
 # from .selector_dialog import FilterDialog
 from .fuzzy_panel import FilterDialog
-from .checkable import CheckableDialog
+from .checkdialog import CheckDialog
 
 
 LANGUAGES_MAP = {lex[0]: lex[1][0] for lex in get_all_lexers()}
@@ -96,9 +96,12 @@ class MyConfigWindow(QDialog):
         if askUser(msg):
             notetypes = aqt.mw.col.models.allNames()
             title = "Select note types whose styling section should be updated"
-            d = CheckableDialog(parent=None, values=list(notetypes), windowtitle=title)
+            d = CheckDialog(parent=None, valuedict={k: False for k in notetypes}, windowtitle=title)
             if d.exec():
-                self.templates_to_update = d.selected
+                self.templates_to_update = []
+                for name, val in d.valuedict.items():
+                    if val:
+                        self.templates_to_update.append(name)   
 
     def oncsschange(self):
         if self.dialog.cb_usecss.isChecked():
@@ -118,6 +121,8 @@ class MyConfigWindow(QDialog):
         self.dialog.cb_showPreCode.setChecked(self.config['show pre/code'])
         self.oncsschange()
         self.dialog.cb_usecss.setChecked(self.config['cssclasses'])
+        if self.config['cssclasses']:
+            self.dialog.wid_css.setVisible(True)
         self.dialog.cb_linenum.setChecked(self.config['linenos'])
         self.dialog.cb_defaultlangperdeck.setChecked(self.config['defaultlangperdeck'])
         self.ondeckdefaultchange()
