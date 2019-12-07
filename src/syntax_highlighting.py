@@ -109,6 +109,8 @@ def update_cssfile_in_mediafolder(style):
 
 def onMySettings():
     dialog = MyConfigWindow(mw, mw.addonManager.getConfig(__name__))
+    dialog.activateWindow()
+    dialog.raise_()
     if dialog.exec_():
         mw.addonManager.writeConfig(__name__, dialog.config)
         if hasattr(dialog, "templates_to_update"):
