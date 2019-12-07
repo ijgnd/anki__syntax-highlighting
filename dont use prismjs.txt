@@ -1,0 +1,16 @@
+prism.js everything into one js file with one theme: 
+I don't want to build an adjusted js file that just contains the syntax highlighting code that people want 
+all langs in one file would mean 500kb that needs to be loaded into every note
+
+maybe offer to download manually? But you still need js and js is not officially supported in 
+Anki - pygments just uses css which should be more robust.
+
+background: to style a function like
+
+    def mytest(arg):
+        print(arg)
+
+you would use:
+
+    <pre class="language-python"><code>def mytest(arg):
+        print(arg)</code></pre>
