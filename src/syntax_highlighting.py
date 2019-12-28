@@ -210,8 +210,9 @@ def hilcd(ed, code, langAlias):
         showError(ERR_STYLE, parent=ed.parentWindow)
         return False
 
+    pygmntd = highlight(code, my_lexer, my_formatter).rstrip()
     if inline:
-        pretty_code = "".join([highlight(code, my_lexer, my_formatter), "<br>"])
+        pretty_code = "".join([pygmntd, "<br>"])
         replacements = {
             '<div class="highlight"': '<span class="highlight"',
             "<pre": "<code",
@@ -226,7 +227,7 @@ def hilcd(ed, code, langAlias):
             pretty_code = pretty_code.replace(k, v)
     else:
         if linenos:
-            pretty_code = "".join([highlight(code, my_lexer, my_formatter), "<br>"])
+            pretty_code = "".join([pygmntd, "<br>"])
         # to show line numbers pygments uses a table. The background color for the code
         # highlighting is limited to this table
         # If pygments doesn't use linenumbers it doesn't use a table. This means
@@ -238,7 +239,7 @@ def hilcd(ed, code, langAlias):
         # which hasn't been published on Ankiweb in 2019-10-02.
         else:
             pretty_code = "".join(["<table><tbody><tr><td>",
-                                    highlight(code, my_lexer, my_formatter),
+                                    pygmntd,
                                     "</td></tr></tbody></table><br>"])
         soup = BeautifulSoup(pretty_code, 'html.parser')
         tablestyling = ""
