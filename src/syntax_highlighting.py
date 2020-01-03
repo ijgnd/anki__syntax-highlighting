@@ -52,10 +52,14 @@ def gc(arg, fail=False):
 
 def set_some_paths():
     global addon_path
+    global addonfoldername
+    global addonname
     global cssfolder
     global mediafolder
     global cssfile
     addon_path = os.path.dirname(__file__)
+    addonfoldername = os.path.basename(addon_path)
+    addonname = mw.addonManager.addonName(addonfoldername)
     cssfolder = os.path.join(addon_path, "css")
     mediafolder = os.path.join(mw.pm.profileFolder(), "collection.media")
     cssfile = os.path.join(mediafolder, "_styles_for_syntax_highlighting.css")
@@ -134,12 +138,16 @@ mw.addonManager.setConfigAction(__name__, onMySettings)
 LANG_MAP = {lex[0]: lex[1][0] for lex in get_all_lexers()}
 
 ERR_LEXER = ("<b>Error</b>: Selected language not found.<br>"
-             "If you set a custom lang selection please make sure<br>"
-             "you typed all list entries correctly.")
+             "A common source of errors: When you update the add-on Anki keeps your user settings"
+             "but an update of the add-on might include a new version of the Pygments library"
+             "which sometimes renames languages. This means a setting that used to work no longer"
+             "works with newer versions of this add-on.")
 
 ERR_STYLE = ("<b>Error</b>: Selected style not found.<br>"
-             "If you set a custom style please make sure<br>"
-             "you typed it correctly.")
+             "A common source of errors: When you update the add-on Anki keeps your user settings"
+             "but an update of the add-on might include a new version of the Pygments library"
+             "which sometimes renames languages. This means a setting that used to work no longer"
+             "works with newer versions of this add-on.")
 
 LASTUSED = ""
 
@@ -197,6 +205,7 @@ def hilcd(ed, code, langAlias):
         my_lexer = get_lexer_by_name(langAlias, stripall=True)
     except ClassNotFound as e:
         print(e)
+        print(ERR_LEXER)
         showError(ERR_LEXER, parent=ed.parentWindow)
         return False
 
@@ -207,6 +216,7 @@ def hilcd(ed, code, langAlias):
             font_size=16, style=mystyle, lineseparator="<br>", wrapcode=True)
     except ClassNotFound as e:
         print(e)
+        print(ERR_STYLE)
         showError(ERR_STYLE, parent=ed.parentWindow)
         return False
 
@@ -328,6 +338,16 @@ def onAll(editor, code):
         hilcd(editor, code, d.selvalue)
 
 
+def illegal_info(val):
+    msg = ('Illegal value ("{}") in the config of the add-on {}.\n'
+           "A common source of errors: When you update the add-on Anki keeps your "
+           "user settings but an update of the add-on might include a new version of "
+           "the Pygments library which sometimes renames languages. This means a "
+           "setting that used to work no longer works with newer versions of this "
+           "add-on.".format(val, addonname))
+    showInfo(msg)
+
+
 def _openHelperMenu(editor, code, selected_text):
     global LASTUSED
 
@@ -349,8 +369,15 @@ def _openHelperMenu(editor, code, selected_text):
         c = menu.addAction("unformatted (<&code>)")
         c.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "code"))
 
-    d = menu.addAction("&default (%s)" % get_default_lang(editor))
-    d.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LANG_MAP[get_default_lang(editor)]))
+    defla = get_default_lang(editor)
+    if defla in LANG_MAP:
+        d = menu.addAction("&default (%s)" % defla)
+        d.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LANG_MAP[defla]))
+    else:
+        d = False
+        illegal_info(defla)
+        return
+    
     if LASTUSED:
         l = menu.addAction("l&ast used")
         l.triggered.connect(lambda _, a=editor, c=code: hilcd(a, c, LASTUSED))
@@ -363,9 +390,15 @@ def _openHelperMenu(editor, code, selected_text):
     a = menu.addAction("&select from all")
     a.triggered.connect(lambda _, a=editor, c=code: onAll(a, c))
     for e in gc("favorites"):
-        a = favmenu.addAction(e)
-        a.triggered.connect(lambda _, a=editor, c=code, l=LANG_MAP[e]: hilcd(a, c, l))
-    menu.setActiveAction(d)
+        if e in LANG_MAP:
+            a = favmenu.addAction(e)
+            a.triggered.connect(lambda _, a=editor, c=code, l=LANG_MAP[e]: hilcd(a, c, l))
+        else:
+            illegal_info(e)
+            return
+
+    if d:
+        menu.setActiveAction(d)
     menu.exec_(QCursor.pos())
 
 
