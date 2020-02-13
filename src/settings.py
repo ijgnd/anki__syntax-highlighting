@@ -70,6 +70,7 @@ class MyConfigWindow(QDialog):
 
     def setbuttons(self):
         self.dialog.pb_setFont.clicked.connect(self.onSelectFont)
+        self.dialog.pb_resetFont.clicked.connect(self.onResetFont)
         self.dialog.pb_setstyle.clicked.connect(self.onSelectStyle)
         self.dialog.pb_up.clicked.connect(self.onListUp)
         self.dialog.pb_down.clicked.connect(self.onListDown)
@@ -146,6 +147,9 @@ class MyConfigWindow(QDialog):
         d = FilterDialog(parent=None, values=sorted(f))
         if d.exec():
             self.dialog.lab_Font_selected.setText(d.selkey)
+
+    def onResetFont(self):
+        self.dialog.lab_Font_selected.setText("default - unset")
 
     def onSelectStyle(self):
         d = FilterDialog(parent=None, values=list(get_all_styles()))
