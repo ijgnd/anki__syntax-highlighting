@@ -124,6 +124,7 @@ class MyConfigWindow(QDialog):
         if self.config['cssclasses']:
             self.dialog.wid_css.setVisible(True)
         self.dialog.cb_linenum.setChecked(self.config['linenos'])
+        self.dialog.cb_remove_leading_spaces.setChecked(self.config['remove leading spaces if possible'])
         self.dialog.cb_defaultlangperdeck.setChecked(self.config['defaultlangperdeck'])
         self.ondeckdefaultchange()
         if self.config['font']:
@@ -227,6 +228,7 @@ class MyConfigWindow(QDialog):
             "favorites": favs,
             "hotkey": shortcut,
             "linenos": self.dialog.cb_linenum.isChecked(),
+            "remove leading spaces if possible": self.dialog.cb_remove_leading_spaces.isChecked(),
             "style": self.dialog.lab_style_selected.text(),
             "font": myfont,
         }

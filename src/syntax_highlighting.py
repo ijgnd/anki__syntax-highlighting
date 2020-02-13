@@ -9,6 +9,7 @@ Copyright: (c) 2012-2015 Tiago Barroso <https://github.com/tmbb>
            (c) 2019 ijgnd
            (c) 2019 anonymous, https://ankiweb.net/shared/info/476705431
            (c) 2020 agentydragon
+           (c) 2020 Harry Kakoulidis/hakakou
 
 Use this at your own risk.
 
@@ -205,7 +206,10 @@ def hilcd(ed, code, langAlias):
         linenos = False
 
     try:
-        my_lexer = get_lexer_by_name(langAlias, stripall=True)
+        if gc("remove leading spaces if possible", True):
+            my_lexer = get_lexer_by_name(langAlias, stripall=False)
+        else:
+            my_lexer = get_lexer_by_name(langAlias, stripall=True)
     except ClassNotFound as e:
         print(e)
         print(ERR_LEXER)
@@ -351,8 +355,36 @@ def illegal_info(val):
     showInfo(msg)
 
 
+def remove_leading_spaces(code):
+    #https://github.com/hakakou/syntax-highlighting/commit/f5678c0e7dfeb926a5d7f0b780d8dce6ffeaa9d9
+    
+    # Search in each line for the first non-whitespace character,
+    # and calculate minimum padding shared between all lines.
+    lines = code.splitlines()
+    starting_space = sys.maxsize
+
+    for l in lines:
+        # only interested in non-empty lines
+        if len(l.strip()) > 0:
+            # get the index of the first non whitespace character
+            s = len(l) - len(l.lstrip())
+            # is it smaller than anything found?
+            if s < starting_space:
+                starting_space = s
+
+    # if we found a minimum number of chars we can strip off each line, do it.
+    if (starting_space < sys.maxsize):
+        code = '';    
+        for l in lines:
+            code = code + l[starting_space:] + '\n'
+    return code
+
+
 def _openHelperMenu(editor, code, selected_text):
     global LASTUSED
+
+    if gc("remove leading spaces if possible", True):
+        code = remove_leading_spaces(code)
 
     menu = QMenu(editor.widget)
     menu.setStyleSheet(basic_stylesheet)

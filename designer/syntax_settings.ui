@@ -114,6 +114,13 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="cb_remove_leading_spaces">
+       <property name="text">
+        <string>remove leading spaces if possible</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
         <widget class="QLabel" name="lab_Font">
