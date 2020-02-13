@@ -8,6 +8,7 @@ Copyright: (c) 2012-2015 Tiago Barroso <https://github.com/tmbb>
            (c) 2018 Rene Schallner
            (c) 2019 ijgnd
            (c) 2019 anonymous, https://ankiweb.net/shared/info/476705431
+           (c) 2020 agentydragon
 
 Use this at your own risk.
 
@@ -175,8 +176,10 @@ def get_default_lang(editor):
 
 
 def process_html(html):
-    html = re.sub(r"{{", "{<!---->{", html)
-    html = re.sub(r"}}", "}<!---->}", html)
+    for pattern, replacement in ((r"{{", r"{<!---->{"),
+                                 (r"}}", r"}<!---->}"),
+                                 (r"::", r":<!---->:")):
+        html = re.sub(pattern, replacement, html)
     return html
 
 
