@@ -51,7 +51,6 @@ class PanelInputLine(QLineEdit):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setStyleSheet('background-color:#ffffff')
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
