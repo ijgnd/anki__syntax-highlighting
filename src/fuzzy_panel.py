@@ -100,27 +100,6 @@ class FilterDialog(QDialog):
         self.setMinimumWidth(1000)
         self.list_box.setAlternatingRowColors(True)
 
-        # style
-        '''
-        self.setStyleSheet(""" QListWidget:item:selected{
-                                    background: lightblue;
-                                    border: 1px solid #6a6ea9;
-                                }
-                                QListWidget{
-                                    background: #f0f0f0;
-                                    show-decoration-selected: 1;
-                                    font-family: "Times New Roman"                                
-                                }
-                                QListWidget::item:alternate {
-                                    background: #E0E0E0;
-                                }    
-                                QLineEdit {
-                                    background-color: #ffffff;
-                                }             
-                                """
-                           )
-        '''
-
         # connections
         self.input_line.textChanged.connect(self.text_changed)
         self.input_line.returnPressed.connect(self.return_pressed)
