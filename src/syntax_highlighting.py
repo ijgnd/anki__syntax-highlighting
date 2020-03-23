@@ -39,7 +39,6 @@ from aqt.utils import showWarning, showInfo
 from anki.utils import json
 from anki.hooks import addHook, wrap
 
-# from .selector_dialog import FilterDialog
 from .fuzzy_panel import FilterDialog
 from .settings import MyConfigWindow
 from .supplementary import wrap_in_tags
