@@ -7,7 +7,6 @@ from aqt.utils import tooltip, showInfo, askUser
 
 from .forms import syntax_settings
 from .forms import deck_default
-# from .selector_dialog import FilterDialog
 from .fuzzy_panel import FilterDialog
 from .checkdialog import CheckDialog
 
