@@ -1,4 +1,28 @@
 """
+Copyright (c): 2018  Rene Schallner (sublimeless_zk)
+               2019- ijgnd
+
+
+extracted from https://raw.githubusercontent.com/renerocksai/sublimeless_zk/
+mainly from fuzzypanel.py (both Classes) and utils.py (the helper functions from the 
+bottom of this file)
+
+               
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+
+
 pyqt dialog that 
 - takes a list or dict
 - shows the listitems or dictkeys in a QListWidget that you can filter
@@ -16,33 +40,11 @@ syntax for the default search method:
 - " to search for space (e.g. "the wind"), 
 - _ to indicate that the line must start with this string (e.g. _wind won't match some wind)
 
-extracted from https://raw.githubusercontent.com/renerocksai/sublimeless_zk/
-mainly from fuzzypanel.py (both Classes) and utils.py (the helper functions from the 
-bottom of this file)
-
-Copyright (c): 2019 ijgnd
-               2018 Rene Schallner (sublimeless_zk)
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Affero General Public License as
-published by the Free Software Foundation, either version 3 of the
-License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-
-# from PyQt5.QtCore import *
-# from PyQt5.QtGui import *
-# from PyQt5.QtWidgets import *
+from aqt import mw
 from aqt.qt import *
-from aqt.utils import tooltip
+from aqt.utils import tooltip, restoreGeom, saveGeom
 
 
 class PanelInputLine(QLineEdit):
@@ -54,10 +56,17 @@ class PanelInputLine(QLineEdit):
 
     def keyPressEvent(self, event):
         super().keyPressEvent(event)
+        mod = mw.app.keyboardModifiers() & Qt.ControlModifier
         key = event.key()
         if key == Qt.Key_Down:
             self.down_pressed.emit()
         elif key == Qt.Key_Up:
+            self.up_pressed.emit()
+        elif mod and (key == Qt.Key_N):
+            self.down_pressed.emit()
+        elif mod and (key == Qt.Key_P):
+            self.up_pressed.emit()
+        elif mod and (key == Qt.Key_H):
             self.up_pressed.emit()
 
 
@@ -91,13 +100,12 @@ class FilterDialog(QDialog):
         self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok |
                                           QDialogButtonBox.Cancel)
         vlay.addWidget(self.buttonbox)
-        # self.buttonbox.accepted.disconnect(self.accept)
-        #   leads to: TypeError: disconnect() failed between 'accepted' and 'accept'
-        self.buttonbox.accepted.connect(self.onAccept)
+        self.buttonbox.accepted.connect(self.accept)
         self.buttonbox.rejected.connect(self.reject)
         self.update_listbox()
         self.setLayout(vlay)
-        self.setMinimumWidth(1000)
+        self.resize(800, 350)
+        restoreGeom(self, "SHFork_fuzzy")
         self.list_box.setAlternatingRowColors(True)
 
         # connections
@@ -109,14 +117,19 @@ class FilterDialog(QDialog):
         self.list_box.installEventFilter(self)
         self.input_line.setFocus()
 
-    def onAccept(self):
+    def reject(self):
+        saveGeom(self, "SHFork_fuzzy")
+        QDialog.reject(self)
+
+    def accept(self):
         row = self.list_box.currentRow()
         if len(self.fuzzy_items) > 0:
             row = self.list_box.currentRow()
             self.selkey = self.fuzzy_items[row]
             if self.dict:
                 self.selvalue = self.dict[self.selkey]
-            self.accept()
+            saveGeom(self, "SHFork_fuzzy")
+            QDialog.accept(self)
         else:
             tooltip('nothing selected. Aborting ...')
             return
@@ -163,10 +176,10 @@ class FilterDialog(QDialog):
             self.list_box.setCurrentRow(row + 1)
 
     def return_pressed(self):
-        self.onAccept()
+        self.accept()
 
     def item_doubleclicked(self):
-        self.onAccept()
+        self.accept()
 
     def eventFilter(self, watched, event):
         if event.type() == QEvent.KeyPress and event.matches(QKeySequence.InsertParagraphSeparator):
