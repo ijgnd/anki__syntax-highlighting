@@ -90,20 +90,38 @@ class FilterDialog(QDialog):
             self.input_line.setText(prefill)
 
     def initUI(self):
-        vlay = QVBoxLayout()
+        self.vlay = QVBoxLayout()
         self.input_line = PanelInputLine()
         self.list_box = QListWidget()
         for i in range(self.max_items):
             self.list_box.insertItem(i, '')
-        vlay.addWidget(self.input_line)
-        vlay.addWidget(self.list_box)
-        self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok |
-                                          QDialogButtonBox.Cancel)
-        vlay.addWidget(self.buttonbox)
-        self.buttonbox.accepted.connect(self.accept)
-        self.buttonbox.rejected.connect(self.reject)
+        self.vlay.addWidget(self.input_line)
+        self.vlay.addWidget(self.list_box)
+
+        self.button_ok = QPushButton("&OK", self)
+        self.button_ok.clicked.connect(self.accept)
+        self.button_ok.setToolTip("Return")
+        # self.button_ok.setAutoDefault(True)
+        
+        self.button_cancel = QPushButton("&Cancel", self)
+        self.button_cancel.clicked.connect(self.reject)
+        self.button_cancel.setToolTip("Esc")
+
+        self.bottombar = QHBoxLayout()
+        self.bottombar.addStretch(1)
+        self.bottombar.addWidget(self.button_ok)
+        self.bottombar.addWidget(self.button_cancel)
+        
+        self.vlay.addLayout(self.bottombar)
+
+        # self.buttonbox = QDialogButtonBox(QDialogButtonBox.Ok |
+        #                                   QDialogButtonBox.Cancel)
+        # self.buttonbox.accepted.connect(self.accept)
+        # self.buttonbox.rejected.connect(self.reject)
+        # vlay.addWidget(self.buttonbox)
+        
         self.update_listbox()
-        self.setLayout(vlay)
+        self.setLayout(self.vlay)
         self.resize(800, 350)
         restoreGeom(self, "SHFork_fuzzy")
         self.list_box.setAlternatingRowColors(True)
