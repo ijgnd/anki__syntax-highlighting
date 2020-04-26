@@ -1,21 +1,3 @@
-"""
-Add-on for Anki 2.1 "Syntax Highlighting FORK"
-
-Copyright: (c) 2012-2015 Tiago Barroso <https://github.com/tmbb>
-           (c) 2015 Tim Rae <https://github.com/timrae>
-           (c) 2018 Glutanimate <https://glutanimate.com/>
-           (c) 2019 anonymous (creator of "Mini Format Pack Supplementary", https://ankiweb.net/shared/info/476705431)
-           (c) 2018 Rene Schallner
-           (c) 2019 ijgnd
-           (c) 2019 anonymous, https://ankiweb.net/shared/info/476705431
-           (c) 2020 agentydragon
-           (c) 2020 Harry Kakoulidis/hakakou
-
-Use this at your own risk.
-
-License: GNU AGPLv3 <https://www.gnu.org/licenses/agpl.html>
-"""
-
 import os
 import sys
 import re

@@ -1,8 +1,6 @@
-<b>For the original add-on <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">Syntax Highlighting for Code</a> click <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.</b> 
-<b>This add-on is a fork (modified version).</b>
+For the original add-on <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">Syntax Highlighting for Code</a> click <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.
 
-
-My version has a different user interface which I think is more flexible to use and easier to setup. You can e.g. ...
+<b>This add-on is a fork (modified version). My version has several improvements, mainly better night mode compatibility and a different user interface which I think is more flexible to use and easier to setup.</b> You can e.g. 
 - ... quickly filter all available styles.
 - ... easily make your syntax highlighting compatible with night mode : Just check two boxes in the configuration dialog (use CSS and update templates). With the original you need to install a different add-on, copy a file to your media folder and adjust all your templates manually. This only works if the style you use is suited to the night mode. Only the default layout is adjusted to the anki nightmode. I haven't tested other layouts.
 - ... paste code as inline code wrapped in a "&lt; code &gt;" tag. To use this press "win/meta" while selecting your action from the menu. This feature mostly works which is enough for me.
@@ -10,7 +8,7 @@ My version has a different user interface which I think is more flexible to use 
 - ... easily configure a custom font for the snippets
 - ... when in the editor you can override your default settings with modifier keys. e.g. You just opened the language selection menu with "Alt+s" in the editor. Then use the cursor to select the relevant language. Before you press "Return" hold down "Alt" and only release it after you have pressed "Return". "Alt" means you get inline styling and you can set a custom style even though in general you use css. "Shift" toggles the default setting for line numbers for this one time and "Control" toggles your setting for centering for this one time.
 
-If the original add-on works well for you or run into problems with my version use the original. Use my version at your own risk! This add-on works well for me but as a prudent user you have backups ...
+Use my version at your own risk! This add-on works well for me but as a prudent user you have backups ...
 
 <img src="https://raw.githubusercontent.com/ijgnd/syntax-highlighting/master/screenshots/1.png"> 
 
@@ -26,26 +24,19 @@ Apart from the different UI I made these changes:
 For the styling related changes I use bs4.
 
 <b># bugs etc.</b>
-I'm not a programmer and don't know much about html and css. It would be great if someone could verify that my processing of the pygments output is still valid html.
-
-Please do not use reviews for bug reports or support requests. I don't get notified of your reviews, and properly troubleshooting an issue through them is nearly impossible (formatting is limited and I can't reply multiple times). If you find a bug let me know on <a href="" rel="nofollow">github</a> or via reddit (/u/ijgnord). 
+Please do not use reviews for bug reports or support requests. I don't get notified of your reviews, and properly troubleshooting an issue through them is nearly impossible (formatting is limited and I can't reply multiple times). If you find a bug let me know on <a href="https://github.com/ijgnd/syntax-highlighting" rel="nofollow">github</a> or via reddit (/u/ijgnord). 
 
 When you use the css option and the code doesn't look like expected: Make sure to check if the styling section of your card template starts with the line '@import url("_styles_for_syntax_highlighting.css");'. Then check if you have the file "_styles_for_syntax_highlighting.css" in your media folder and if it contains the css styles you want.
 
+<b># Versions</b>
+- 2020-04-27 small improvements for the filter dialog: remember size, etc.
+- 2020-03-24 pygments 2.6.1, night-mode fix in settings, reset font option in settings, remove leading spaces if possible (code by hakakou), 
+- 2020-01-03 handle non-existent lang names
+- 2019-12-28 Pygments 2.5.2, fix for "sometimes no text was pasted"
+- 2019-11-19 multiple fixes, improve inline code function, postprocess with bs4
+- 2019-10-18 initial release
+
 <b># Credits and License</b>
-Copyright © 
-- <a href="https://github.com/tmbb" rel="nofollow">2012-2015 Tiago Barroso</a>
-- <a href="https://github.com/timrae" rel="nofollow">2015 Tim Rae</a>
-- <a href="https://ankiweb.net/shared/info/476705431" rel="nofollow">2019 anonymous (creator of "Mini Format Pack Supplementary")</a>
-- <a href="https://glutanimate.com/" rel="nofollow">2018-2019 Aristotelis P.  (Glutanimate)</a>
-- <a href="https://github.com/renerocksai/sublimeless_zk" rel="nofollow">2018 Rene Schallner</a>
-- <a href="https://github.com/ijgnd/syntax-highlighting" rel="nofollow">2019 ijgnd</a>
-- <a href="http://pygments.org/" rel="nofollow">2006-2019 the Pygments Team</a> 
+see the file<a href="https://github.com/ijgnd/anki__syntax-highlighting/blob/master/src/__init__.py" rel="nofollow">__init__.py</a> of this add-on.
 
-Licensed under the GNU AGPLv3, extended by a number of additional terms (Pygments is originally licensed under the BSD license).
-
-Also see <a href="https://github.com/glutanimate/syntax-highlighting" rel="nofollow">Syntax Highlighting for Code</a>.
-
-This add-on just adds a different GUI. I'm standing on the shoulders of giants (tmbb, glutanimate, renerocksai, and the creator of "Mini Format Pack Supplementary"). Thanks to the original authors of this addon! 
-
-I didn't make a pull request to the original repo yet because my version is different and maybe some people prefer the old menu in the buttons bar, because it's less well tested, and because my code doesn't adhere to the <a href="https://github.com/glutanimate/docs/blob/master/anki/add-ons/CONTRIBUTING.md#how-to-contribute-to-my-anki-add-ons" rel="nofollow">guidelines for contributions the current maintainer glutanimate recently published</a>. <b>If you want to support anki add-on developers see <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.</b>
+I didn't make a pull request to the original repo because my version is different and maybe some people prefer the old menu in the buttons bar and because my code doesn't adhere to the <a href="https://github.com/glutanimate/docs/blob/master/anki/add-ons/CONTRIBUTING.md#how-to-contribute-to-my-anki-add-ons" rel="nofollow">guidelines for contributions the current maintainer glutanimate has published in 2020-04</a>.
