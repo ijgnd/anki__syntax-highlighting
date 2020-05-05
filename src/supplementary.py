@@ -7,7 +7,6 @@ import re
 
 
 def escape_html_chars(s):
-
     html_escape_table = {
         "&": "&amp;",
         '"': "&quot;",
@@ -16,9 +15,7 @@ def escape_html_chars(s):
         "<": "&lt;",
         "\n":"<br>"
     }
-
     result = "".join(html_escape_table.get(c, c) for c in s)
-
     return result
 
 
@@ -26,8 +23,6 @@ def wrap_in_tags(editor, selection, tag, class_name=None):
     """
     Wrap selected text in a tag, optionally giving it a class.
     """
-
-
     selection = escape_html_chars(selection)
     # print("before1:",repr(selection))
     # selection = selection.replace("\n", "<br>")
