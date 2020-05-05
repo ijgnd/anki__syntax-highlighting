@@ -2,6 +2,7 @@
 # slightly adjusted functions from the add-on "Mini Format Pack Supplementary"
 # which aws anonymously uploaded to Ankiweb, https://ankiweb.net/shared/info/476705431
 
+import json
 import re
 
 
