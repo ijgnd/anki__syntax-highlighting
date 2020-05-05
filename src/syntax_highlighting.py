@@ -270,8 +270,20 @@ def hilcd(ed, code, langAlias):
                 for t in soup.findAll("code"):
                     t['style'] = "font-family: %s;" % gc('font')
         pretty_code = str(soup)
-    out = "`" + json.dumps(pretty_code)[1:-1] + "`"
-    ed.web.eval("MyInsertHtml(%s);" % out)
+    if noclasses:
+        out = json.dumps(pretty_code).replace('\n', ' ').replace('\r', '')
+        # In 2020-05 I don't remember why I used backticks/template literals 
+        # here in commit 6ea0fe8 from 2019-11.
+        # Maybe for multi-line strings(?) but json.dumps shouldn't include newlines, because
+        # json.dumps does "Serialize obj to a JSON formatted str using this conversion table." 
+        # for the conversion table see https://docs.python.org/3/library/json.html#py-to-json-table
+        # which includes JSONEncoder(.. indent=None, separators=None,..) and 
+        #   If indent ... None (the default) selects the most compact representation.
+        # out = "`" + json.dumps(pretty_code)[1:-1] + "`"
+        ed.web.eval("MyInsertHtml(%s);" % out)
+    else:
+        ed.web.eval("setFormat('inserthtml', %s);" % json.dumps(pretty_code))
+        # ed.web.eval("document.execCommand('inserthtml', false, %s);" % json.dumps(pretty_code))
     LASTUSED = langAlias
 
 
