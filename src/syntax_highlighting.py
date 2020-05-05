@@ -37,15 +37,15 @@ def set_some_paths():
     global addon_path
     global addonfoldername
     global addonname
-    global cssfolder
+    global css_templates_folder
     global mediafolder
-    global cssfile
+    global css_file_in_media
     addon_path = os.path.dirname(__file__)
     addonfoldername = os.path.basename(addon_path)
     addonname = mw.addonManager.addonName(addonfoldername)
-    cssfolder = os.path.join(addon_path, "css")
+    css_templates_folder = os.path.join(addon_path, "css")
     mediafolder = os.path.join(mw.pm.profileFolder(), "collection.media")
-    cssfile = os.path.join(mediafolder, "_styles_for_syntax_highlighting.css")
+    css_file_in_media = os.path.join(mediafolder, "_styles_for_syntax_highlighting.css")
 addHook("profileLoaded", set_some_paths)
 
 
@@ -68,8 +68,8 @@ function MyInsertHtml(content) {
 
 def profileLoaded():
     editor_style = ""
-    if os.path.isfile(cssfile):
-        with open(cssfile, "r") as css_file:
+    if os.path.isfile(css_file_in_media):
+        with open(css_file_in_media, "r") as css_file:
             css = css_file.read()
             editor_style = "<style>\n{}\n</style>".format(css.replace("%", "%%"))
     aqt.editor._html = editor_style + insertscript + aqt.editor._html
@@ -87,10 +87,10 @@ def update_templates(templatenames):
 
 
 def update_cssfile_in_mediafolder(style):
-    sourcefile = os.path.join(cssfolder, style + ".css")
-    with open(sourcefile) as f:
+    template_file = os.path.join(css_templates_folder, style + ".css")
+    with open(template_file) as f:
         css = f.read()
-    with open(cssfile, "w") as f:
+    with open(css_file_in_media, "w") as f:
         f.write(css % gc("font", "Droid Sans Mono"))
 
 
