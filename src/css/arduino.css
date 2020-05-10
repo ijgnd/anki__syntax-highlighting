@@ -5,6 +5,14 @@
     padding-right: 5px;
   }
 
+.highlight code {
+    font-family: %s;
+  }
+
+.highlight pre {
+    font-family: %s;
+  }
+
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #ffffff; }
 .highlight .c { color: #95a5a6 } /* Comment */

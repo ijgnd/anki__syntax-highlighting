@@ -3,7 +3,15 @@
     font-family: %s;
     padding-left: 5px;
     padding-right: 5px;
-  }
+}
+
+.highlight code {
+    font-family: %s;
+}
+
+.highlight pre {
+    font-family: %s;
+}
   
 .highlight .hll { background-color: #333333 }
 .highlight  { background: #111111; color: #ffffff }

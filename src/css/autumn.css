@@ -4,7 +4,15 @@
     padding-left: 5px;
     padding-right: 5px;
   }
-  
+
+.highlight code {
+    font-family: %s;
+  }
+
+.highlight pre {
+    font-family: %s;
+  }
+
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #ffffff; }
 .highlight .c { color: #aaaaaa; font-style: italic } /* Comment */

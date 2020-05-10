@@ -91,7 +91,8 @@ def update_cssfile_in_mediafolder(style):
     with open(template_file) as f:
         css = f.read()
     with open(css_file_in_media, "w") as f:
-        f.write(css % gc("font", "Droid Sans Mono"))
+        font = gc("font", "Droid Sans Mono")
+        f.write(css % (font, font, font))
 
 
 def onMySettings():
