@@ -393,10 +393,10 @@ def _openHelperMenu(editor, code, selected_text):
     menu.installEventFilter(kfilter)
 
     if gc("show pre/code", False):
-        u = menu.addAction("&unformatted (<pre>)")
-        u.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "pre"))
-        c = menu.addAction("unformatted (<&code>)")
-        c.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "code"))
+        m_pre = menu.addAction("&unformatted (<pre>)")
+        m_pre.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "pre"))
+        m_cod = menu.addAction("unformatted (<&code>)")
+        m_cod.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "code"))
 
     defla = get_default_lang(editor)
     if defla in LANG_MAP:
