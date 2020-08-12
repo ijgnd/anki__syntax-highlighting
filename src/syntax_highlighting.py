@@ -393,6 +393,8 @@ def _openHelperMenu(editor, code, selected_text):
     menu.installEventFilter(kfilter)
 
     if gc("show pre/code", False):
+        # TODO: Do I really need the custom code, couldn't I just wrap in newer versions
+        # as with the mini format pack, see https://github.com/glutanimate/mini-format-pack/pull/13/commits/725bb8595631e4dbc56bf881427aeada848e43c9
         m_pre = menu.addAction("&unformatted (<pre>)")
         m_pre.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "pre"))
         m_cod = menu.addAction("unformatted (<&code>)")
