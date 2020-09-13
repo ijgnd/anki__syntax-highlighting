@@ -7,6 +7,7 @@ import aqt
 from aqt.qt import *
 from aqt.utils import tooltip, showInfo, askUser
 
+from .config import ex_html_edi
 from .forms import syntax_settings
 from .forms import deck_default
 from .fuzzy_panel import FilterDialog
@@ -95,6 +96,7 @@ class MyConfigWindow(QDialog):
                 "custom changes. So make sure to have backups of the file."
               )
         showInfo(msg)
+        # TODO: use my codemirror add-on with its versioning: ex_html_edi
 
     def onupdatetemplates(self):
         msg = ("If you want to use CSS for syntax highlighting you need about 50-100 lines"
