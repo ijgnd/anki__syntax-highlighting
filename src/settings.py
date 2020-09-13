@@ -108,14 +108,18 @@ class MyConfigWindow(QDialog):
                "dialog.\n\n"
                "Continue?")
         if askUser(msg):
+            msg2 = "Update all note types (yes) or select note types to update (no)?"
             notetypes = aqt.mw.col.models.allNames()
-            title = "Select note types whose styling section should be updated"
-            d = CheckDialog(parent=None, valuedict={k: False for k in notetypes}, windowtitle=title)
-            if d.exec():
-                self.templates_to_update = []
-                for name, val in d.valuedict.items():
-                    if val:
-                        self.templates_to_update.append(name)   
+            if askUser(msg2):
+                self.templates_to_update = notetypes
+            else:
+                title = "Select note types whose styling section should be updated"
+                d = CheckDialog(parent=None, valuedict={k: False for k in notetypes}, windowtitle=title)
+                if d.exec():
+                    self.templates_to_update = []
+                    for name, val in d.valuedict.items():
+                        if val:
+                            self.templates_to_update.append(name)
 
     def oncsschange(self):
         if self.dialog.cb_usecss.isChecked():
