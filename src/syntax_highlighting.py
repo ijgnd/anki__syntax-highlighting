@@ -21,13 +21,10 @@ from aqt.utils import showWarning, showInfo
 from anki.utils import json
 from anki.hooks import addHook, wrap
 
+from .config import gc
 from .fuzzy_panel import FilterDialog
 from .settings import MyConfigWindow
 from .supplementary import wrap_in_tags
-
-
-def gc(arg, fail=False):
-    return mw.addonManager.getConfig(__name__).get(arg, fail)
 
 
 ############################################
