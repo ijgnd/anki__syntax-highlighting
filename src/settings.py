@@ -1,6 +1,8 @@
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 
+import os
+
 import aqt
 from aqt.qt import *
 from aqt.utils import tooltip, showInfo, askUser
@@ -81,6 +83,18 @@ class MyConfigWindow(QDialog):
         self.dialog.cb_usecss.stateChanged.connect(self.oncsschange)
         self.dialog.cb_defaultlangperdeck.stateChanged.connect(self.ondeckdefaultchange)
         self.dialog.pb_updateTemplates.clicked.connect(self.onupdatetemplates)
+        self.dialog.pb_edit_css_file.clicked.connect(self.edit_css_file)
+
+    def edit_css_file(self):
+        mediafolder = os.path.join(aqt.mw.pm.profileFolder(), "collection.media")
+        css_file_in_media = os.path.join(mediafolder, "_styles_for_syntax_highlighting.css")
+        msg = ( "Edit the following file in a text editor and then restart Anki "
+               f"to apply your changes:\n\n{css_file_in_media}\n\nKeep in mind that when you "
+                "later change the style in the config of this add-on the file "
+                "'_styles_for_syntax_highlighting.css' will be overwritten so that you lose "
+                "custom changes. So make sure to have backups of the file."
+              )
+        showInfo(msg)
 
     def onupdatetemplates(self):
         msg = ("If you want to use CSS for syntax highlighting you need about 50-100 lines"
