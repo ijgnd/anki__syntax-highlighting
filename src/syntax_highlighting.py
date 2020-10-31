@@ -207,6 +207,7 @@ def hilcd(ed, code, langAlias):
         return False
 
     pygmntd = highlight(code, my_lexer, my_formatter).rstrip()
+    pygmntd = pygmntd.replace('line-height: 125%;', '')  # 'line-height: 100%')
     if inline:
         pretty_code = "".join([pygmntd, "<br>"])
         replacements = {
