@@ -252,19 +252,23 @@ def hilcd(ed, code, langAlias):
                     t['style'] = tablestyling
             if noclasses:
                 if t.has_attr('class'):
-                    del t["class"]   # class tablehighlight
+                    # del t["class"]   # class tablehighlight
+                    t["class"] = [f"shf__{mystyle}__tablehighlight", ]
         if noclasses:
             for d in soup.find_all(attrs={'class': 'highlight'}):
                 # thestyle = d['style']
-                del d["class"]
+                # del d["class"]
+                d["class"] = [f"shf__{mystyle}__highlight", ]
             for d in soup.find_all("td"):
                 if t.has_attr('class'):
-                    del d["class"]
+                    # del d["class"]
+                    d["class"] = [f'''shf__{mystyle}__{d["class"][0]}''', ]
             for d in soup.find_all(attrs={'class': 'linenodiv'}):
                 # even for dark styles pygments uses a bright background color for the line numbers
                 # In Night mode you then have unreadable white text on white background
                 d['style'] = """background-color: transparent;"""
-                del d["class"]
+                # del d["class"]
+                d["class"] = [f"shf__{mystyle}__linenodiv", ]
             if gc('font'):
                 for t in soup.findAll("code"):
                     t['style'] = "font-family: %s;" % gc('font')
