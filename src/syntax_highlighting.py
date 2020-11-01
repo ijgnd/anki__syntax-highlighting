@@ -492,6 +492,61 @@ def remove_leading_spaces(code):
     return code
 
 
+
+'''
+Notes about wrapping with pre or code
+
+pre is supposed to be "preformatted text which is to be presented exactly as written 
+in the HTML file.", https://developer.mozilla.org/en-US/docs/Web/HTML/Element/pre, 
+
+
+there are some differences: pre is a block element, see https://www.w3schools.com/html/html_blocks.asp
+so code is an inline element, then I could use the "Custom Styles" add-on,
+https://ankiweb.net/shared/info/1899278645 to apply the code tag?
+
+
+### "Mini Format Pack supplementary" approach, https://ankiweb.net/shared/info/476705431?
+# wrap_in_tags(editor, code, "pre")) 
+# wrap_in_tags(editor, code, "code"))
+# My custom version depends on deleting the selection first
+
+
+
+### combine execCommands delete and insertHTML
+# I remove the selection when opening the helper menu
+#     editor.web.evalWithCallback("document.execCommand('delete');", lambda 
+#                                 _, e=editor, c=code: _openHelperMenu(e, c, True))
+# then in theory this should work:
+#   editor.web.eval(f"""document.execCommand('insertHTML', false, %s);""" % json.dumps(code))
+# but it often doesn't work in Chrome
+# e.g.
+#      code = f"<table><tbody><tr><td><pre>{code}</pre></td></tr></tbody></table>"  # works
+#      code = f"<p><pre>{code}</pre></p>"  # doesn't work
+#      code = f'<pre id="{uuid.uuid4().hex}">{code}</pre>'  # doesn't work
+#      code = f'<pre style="" id="{uuid.uuid4().hex}">{code}</pre>'  # doesn't work
+#      code = '<pre class="shf_pre">' + code + "</pre>"  # doesn't work
+#      code = '<div class="city">' + code + "</div>"     # doesn't work
+#      code = """<span style=" font-weight: bold;">code </span>"""  # works
+#      code = """<div style=" font-weight: bold;">code </div>"""  # partially: transformed into span?
+# That's a known problem, see https://stackoverflow.com/questions/25941559/is-there-a-way-to-keep-execcommandinserthtml-from-removing-attributes-in-chr
+# The top answer is to use a custom js inserter function
+
+
+### MiniFormatPack approach
+#     editor.web.eval("setFormat('formatBlock', 'pre')")
+# setFormat is a thin Anki wrapper around document.execCommand
+# but this formats the whole paragraph and not just the selection
+
+
+### idea: move the selection to a separate block first. Drawback: in effect there's no undo
+# undo in contenteditable is hard, works best if I just use document.execCommand, i.e.
+# setFormat. So I have to decide what's more important for me, I think undo is more important
+
+
+At the moment my version of the MiniFormatSupplementary mostly works so I keep it.
+'''
+
+
 def _openHelperMenu(editor, code, selected_text):
     global LASTUSED
 
