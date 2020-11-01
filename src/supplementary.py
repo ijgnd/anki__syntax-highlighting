@@ -28,8 +28,13 @@ def wrap_in_tags(editor, selection, tag, class_name=None):
     # selection = selection.replace("\n", "<br>")
     # print("after1:", repr(selection))
 
-    tag_string_begin = ("<{0} class='{1}'>".format(tag, class_name) if
-                        class_name else "<{0}>".format(tag))
+    if tag == "pre":
+        maybe_left = ' style="text-align: left;"'
+    else:
+        maybe_left = ""
+
+    tag_string_begin = ('<{0} class="{1}"{2}>'.format(tag, class_name, maybe_left) if
+                        class_name else "<{0}{2}>".format(tag, maybe_left))
     tag_string_end = "</{0}>".format(tag)
 
     html = editor.note.fields[editor.currentField]
