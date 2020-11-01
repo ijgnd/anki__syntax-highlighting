@@ -1,34 +1,45 @@
-For the original add-on <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">Syntax Highlighting for Code</a> click <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.
+For the original add-on <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">Syntax Highlighting for Code</a> (maintained/extened by glutanimate) click <a href="https://ankiweb.net/shared/info/1463041493" rel="nofollow">here</a>.
 
 <b>This add-on is a fork (modified version). My version has several improvements, mainly better night mode compatibility and a different user interface which I think is more flexible to use and easier to setup.</b> You can e.g. 
 - ... quickly filter all available styles.
-- ... easily make your syntax highlighting compatible with night mode : Just check two boxes in the configuration dialog (use CSS and update templates). With the original you need to install a different add-on, copy a file to your media folder and adjust all your templates manually. This only works if the style you use is suited to the night mode. Only the default layout is adjusted to the anki nightmode. I haven't tested other layouts.
-- ... paste code as inline code wrapped in a "&lt; code &gt;" tag. To use this press "win/meta" while selecting your action from the menu. This feature mostly works which is enough for me.
-- ... paste code unformatted from the menu which I prefer over additional shortcuts I would have to remember for the SupplementaryMiniFormatPack. Actually I reused the relevant code from this add-on for mine.
+- ... easily make your syntax highlighting compatible with night mode: If you don't need a custom background color for your code block it's just one checkbox in the add-on config for many themes. If you want custom background colors check two boxes in the configuration dialog (use CSS and update templates). With the original you need to install a different add-on, copy a file to your media folder and adjust all your templates manually. As in the original add-on the css option only works if the style you use is suited to the night mode. Only the default layout is adjusted to the anki nightmode. I haven't tested other layouts.
+- ... paste code unformatted (wrapped in "pre" or "code" tags). For <code>pre</code> this add-on automatically set the inline styling <code></code>style="text-align: left;"</code> so that the code is properly left aligned even if you have "text-align: center" from the .card class.
 - ... easily configure a custom font for the snippets
+- ... paste highlighted code as inline code wrapped in a "&lt; code &gt;" tag. To use this press "win/meta" while selecting your action from the menu. This feature only partially works.
 - ... when in the editor you can override your default settings with modifier keys. e.g. You just opened the language selection menu with "Alt+s" in the editor. Then use the cursor to select the relevant language. Before you press "Return" hold down "Alt" and only release it after you have pressed "Return". "Alt" means you get inline styling and you can set a custom style even though in general you use css. "Shift" toggles the default setting for line numbers for this one time and "Control" toggles your setting for centering for this one time.
+- ... set a custom font.
 
 Use my version at your own risk! This add-on works well for me but as a prudent user you have backups ...
 
 <img src="https://raw.githubusercontent.com/ijgnd/syntax-highlighting/master/screenshots/1.png"> 
+You can download the following screencasts (gifs) by right-clicking them. Then select "save image as" from the context menu (tested in Chrome and Firefox). Then open these gifs with a program that supports to pause gif files. On Windows I use the popular image viewer IrfanView that can also display gifs. IrfanView has "Options-&gt;Start/Stop Animation" and you can adjust the speed with [SHIFT][CTRL][+] or [SHIFT][CTRL][-]. On Linux I use mpv. 
+<img src="https://raw.githubusercontent.com/ijgnd/syntax-highlighting/master/screenshots/demo_config_with_nm_toggle_addon.gif"> 
+In this screencast I use <a href="https://gist.github.com/hikaru-y/737e60d5ff58a124ffe7e2a78a385831" rel="nofollow">this add-on</a> to toggle the night mode for webviews.
 
 <a href="https://raw.githubusercontent.com/ijgnd/syntax-highlighting/master/screenshots/syntax_highlight_fork.gif" rel="nofollow">Here</a> is a screencast about the initial setup and use.
 
+
+<b># Night Mode setup (if you use the default options that don't use classes)</b>
+By default pygments creates code snippets that have a bright background. 
+
 <b># technical changes</b>
 Apart from the different UI I made these changes:
-- For centering I no longer use the <a href="https://developer.mozilla.org/de/docs/Web/HTML/Element/center" rel="nofollow">deprecated</a> "&lt;center&gt;" tag. Instead I use "margin: 0 auto;". 
-- When no css is used I also add "text-align: left;" to the table style so that I can override the setting "text-align: center" from the .card class. This isn't necessary when you use "&lt;center&gt;".
-- When no css is used pygments still applies the classes "highlight", "tablehighlight", "linenodiv". This means that this snippet will still get styled if you have set some css for these classes. That's why I remove them.
-- When no css is used and you use line numbers pygments will add a bright background colors to the line numbers. When using night-mode you'll have white text on this unchanged white background. That's why I set the background for the linenumbers column to transparent if no css is used. 
-- For inserting the html I don't use "inserthtml" because this strips inline styling when it matches the css styling. In the editor text-align is set to left. When I use "inserthtml" this removes the inline style "text-align: left;" from a tag. When I review and use "text-align: center" this will be a problem. So I switched to a custom html insertion function. 
-For the styling related changes I use bs4.
+- I bundle much more recent pygments versions. 
+- For centering I no longer use the <a href="https://developer.mozilla.org/de/docs/Web/HTML/Element/center" rel="nofollow">deprecated</a> "&lt;center&gt;" tag. Instead I use "margin: 0 auto;". When no css is used I also add "text-align: left;" for the code (or pre tag) so that I can override the setting "text-align: center" from the .card class. This isn't necessary when you use "&lt;center&gt;".
+- When no css is used pygments still applies the classes "highlight". This has advantages but also some drawbacks. Usually I want a really dark background but such a background doesn't work for all themes, e.g. keywords in the borland theme are dark blue and hardly readable on a dark background. So my add-on adds a custom class for each theme: Instead of just "highlight" a class like "shf__default__highlight" (if you use the default theme) or "shf__borland__highlight" is added.
+- For inserting html without classes I don't use "inserthtml" because this strips inline styling when it matches the css styling. For technical details see e.g. <a href="https://stackoverflow.com/questions/25941559/is-there-a-way-to-keep-execcommandinserthtml-from-removing-attributes-in-chr" rel="nofollow">this stackoverflow thread</a>. In the editor text-align is set to left. When I use "inserthtml" this removes the inline style "text-align: left;" from a tag. When I review and use "text-align: center" this will be a problem. So I switched to a custom html insertion function. 
+For some styling related changes I use bs4.
 
 <b># bugs etc.</b>
-Please do not use reviews for bug reports or support requests. I don't get notified of your reviews, and properly troubleshooting an issue through them is nearly impossible (formatting is limited and I can't reply multiple times). If you find a bug let me know on <a href="https://github.com/ijgnd/syntax-highlighting" rel="nofollow">github</a> or via reddit (/u/ijgnord). 
+Please do not use reviews for bug reports or support requests. I don't get notified of your reviews, and properly troubleshooting an issue through them is nearly impossible (formatting is limited and I can't reply multiple times). If you find a bug let me know on <a href="https://github.com/ijgnd/syntax-highlighting" rel="nofollow">github</a> or in the anki forum (click the "contact author" button in the upper right).
 
 When you use the css option and the code doesn't look like expected: Make sure to check if the styling section of your card template starts with the line '@import url("_styles_for_syntax_highlighting.css");'. Then check if you have the file "_styles_for_syntax_highlighting.css" in your media folder and if it contains the css styles you want.
 
 <b># Versions</b>
+- 2020-11-01 "pre" has inline style "text-align: left;" and custom class, individual class for each theme, use less bs4, 
+- 2020-09-13 pygments 2.7.0, add button in settings to view/edit css file (location), add dialog to update all templates (instead of having to select each one). 
+- 2020-05-13 try to fix #2 (display chosen font when using classes)
+- 2020-05-05 fix #1 (some code isn't inserted)
 - 2020-04-27 small improvements for the filter dialog: remember size, etc.
 - 2020-03-24 pygments 2.6.1, night-mode fix in settings, reset font option in settings, remove leading spaces if possible (code by hakakou), 
 - 2020-01-03 handle non-existent lang names
@@ -37,6 +48,8 @@ When you use the css option and the code doesn't look like expected: Make sure t
 - 2019-10-18 initial release
 
 <b># Credits and License</b>
-see the file<a href="https://github.com/ijgnd/anki__syntax-highlighting/blob/master/src/__init__.py" rel="nofollow">__init__.py</a> of this add-on.
+see the file <a href="https://github.com/ijgnd/anki__syntax-highlighting/blob/master/src/__init__.py" rel="nofollow">__init__.py</a> of this add-on.
 
-I didn't make a pull request to the original repo because my version is different and maybe some people prefer the old menu in the buttons bar and because my code doesn't adhere to the <a href="https://github.com/glutanimate/docs/blob/master/anki/add-ons/CONTRIBUTING.md#how-to-contribute-to-my-anki-add-ons" rel="nofollow">guidelines for contributions the current maintainer glutanimate has published in 2020-04</a>.
+the code to insert/wrap in "pre" or "code" tags is reused from the add-on  <a href="https://ankiweb.net/shared/info/476705431" rel="nofollow">Mini Format Pack Supplementary</a>.
+
+I didn't make a pull request to the original repo because my version is different and maybe some people prefer the old menu in the buttons bar and because my code doesn't adhere to the <a href="https://github.com/glutanimate/docs/blob/master/anki/add-ons/CONTRIBUTING.md#how-to-contribute-to-my-anki-add-ons" rel="nofollow">guidelines for contributions the current maintainer glutanimate has published (still latest in 2020-11)</a>.
