@@ -13,6 +13,6 @@
     "hotkey": "Alt+s",
     "linenos": false,
     "remove leading spaces if possible": true,
-    "show pre/code": false,
+    "show pre/code": true,
     "style": "default"
 }
