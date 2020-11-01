@@ -34,7 +34,7 @@ def wrap_in_tags(editor, selection, tag, class_name=None):
         maybe_left = ""
 
     tag_string_begin = ('<{0} class="{1}"{2}>'.format(tag, class_name, maybe_left) if
-                        class_name else "<{0}{2}>".format(tag, maybe_left))
+                        class_name else "<{0}{1}>".format(tag, maybe_left))
     tag_string_end = "</{0}>".format(tag)
 
     html = editor.note.fields[editor.currentField]
