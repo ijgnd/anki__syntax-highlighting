@@ -83,13 +83,29 @@ def update_templates(templatenames):
                 mw.col.models.save(model, templates=True)
 
 
+
+# font_for_line_numbers
+css_to_set_font_for_line_numbers = """
+.shf__{style}__highlighttable tbody tr td.linenos div.linenodiv pre span {{
+    font-family: {font};
+}}
+
+.shf__{style}__highlighttable tbody tr td.linenos div.linenodiv pre {{
+    font-family: {font};
+}}
+"""
+
 def update_cssfile_in_mediafolder(style):
     template_file = os.path.join(css_templates_folder, style + ".css")
     with open(template_file) as f:
         css = f.read()
     with open(css_file_in_media, "w") as f:
         font = gc("font", "Droid Sans Mono")
-        f.write(css % (font, font, font))
+        withfonts = css % (font, font, font)
+        withstyles = withfonts.replace(".highlight", f".shf__{style}__highlight")
+        line_number_fix = css_to_set_font_for_line_numbers.format(style=style, font=font)
+        # for compatibiltiy with releases before 2020-11 I also need the default class names
+        f.write(withstyles + "\n\n\n" + line_number_fix + "\n\n\n" + withfonts)
 
 
 def onMySettings():
