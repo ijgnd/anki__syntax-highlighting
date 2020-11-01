@@ -294,14 +294,14 @@ wrapcode
     if inline:
         pretty_code = "".join([pygmntd, "<br>"])
         replacements = {
-            '<div class="highlight"': '<span class="highlight"',
+            '<div class=': '<span class=',
             "<pre": "<code",
             "</pre></div>": "</code></span>",
             "<br>": "",
             "</br>": "",
             "</ br>": "",
             "<br />": "",
-            'style="line-height: 125%"': 'style="line-height: 100%"',
+            'style="line-height: 125%"': '',
         }
         for k, v in replacements.items():
             pretty_code = pretty_code.replace(k, v)
