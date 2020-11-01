@@ -197,6 +197,85 @@ def hilcd(ed, code, langAlias):
 
     try:
         # http://pygments.org/docs/formatters/#HtmlFormatter
+        """
+nowrap
+    If set to True, don’t wrap the tokens at all, not even inside a <pre> tag. This disables most other options (default: False).
+
+full
+    Tells the formatter to output a “full” document, i.e. a complete self-contained document (default: False).
+
+title
+    If full is true, the title that should be used to caption the document (default: '').
+
+style
+    The style to use, can be a string or a Style subclass (default: 'default'). This option has no effect if the cssfile and noclobber_cssfile option are given and the file specified in cssfile exists.
+
+noclasses
+    If set to true, token <span> tags (as well as line number elements) will not use CSS classes, but inline styles. This is not recommended for larger pieces of code since it increases output size by quite a bit (default: False).
+
+classprefix
+    Since the token types use relatively short class names, they may clash with some of your own class names. In this case you can use the classprefix option to give a string to prepend to all Pygments-generated CSS class names for token types. Note that this option also affects the output of get_style_defs().
+
+cssclass
+    CSS class for the wrapping <div> tag (default: 'highlight'). If you set this option, the default selector for get_style_defs() will be this class.
+    If you select the 'table' line numbers, the wrapping table will have a CSS class of this string plus 'table', the default is accordingly 'highlighttable'.
+
+cssstyles
+    Inline CSS styles for the wrapping <div> tag (default: '').
+
+prestyles
+    Inline CSS styles for the <pre> tag (default: '').
+
+cssfile
+    If the full option is true and this option is given, it must be the name of an external file. If the filename does not include an absolute path, the file’s path will be assumed to be relative to the main output file’s path, if the latter can be found. The stylesheet is then written to this file instead of the HTML file.
+
+noclobber_cssfile
+    If cssfile is given and the specified file exists, the css file will not be overwritten. This allows the use of the full option in combination with a user specified css file. Default is False.
+
+linenos
+    If set to 'table', output line numbers as a table with two cells, one containing the line numbers, the other the whole code. This is copy-and-paste-friendly, but may cause alignment problems with some browsers or fonts. If set to 'inline', the line numbers will be integrated in the <pre> tag that contains the code
+    The default value is False, which means no line numbers at all.
+    For compatibility with Pygments 0.7 and earlier, every true value  except 'inline' means the same as 'table' (in particular, that means also True).
+
+hl_lines
+    Specify a list of lines to be highlighted.
+
+linenostart
+    The line number for the first line (default: 1).
+
+linenostep
+    If set to a number n > 1, only every nth line number is printed.
+
+linenospecial
+    If set to a number n > 0, every nth line number is given the CSS class "special" (default: 0).
+
+nobackground
+    If set to True, the formatter won’t output the background color for the wrapping element (this automatically defaults to False when there is no wrapping element [eg: no argument for the get_syntax_defs method given]) (default: False).
+
+lineseparator
+    This string is output between lines of code. It defaults to "\n", which is enough to break a line inside <pre> tags, but you can e.g. set it to "<br>" to get HTML line breaks.
+
+lineanchors
+    If set to a nonempty string, e.g. foo, the formatter will wrap each output line in an anchor tag with a name of foo-linenumber. This allows easy linking to certain lines.
+
+linespans
+    If set to a nonempty string, e.g. foo, the formatter will wrap each output line in a span tag with an id of foo-linenumber. This allows easy access to lines via javascript.
+
+anchorlinenos
+    If set to True, will wrap line numbers in <a> tags. Used in combination with linenos and lineanchors.
+
+tagsfile
+    If set to the path of a ctags file, wrap names in anchor tags that link to their definitions. lineanchors should be used, and the tags file should specify line numbers (see the -n option to ctags).
+
+tagurlformat
+    A string formatting pattern used to generate links to ctags definitions. Available variables are %(path)s, %(fname)s and %(fext)s. Defaults to an empty string, resulting in just #prefix-number links.
+
+filename
+    A string used to generate a filename when rendering <pre> blocks, for example if displaying source code.
+
+wrapcode
+    Wrap the code inside <pre> blocks using <code>, as recommended by the HTML5 specification.
+        """
         my_formatter = HtmlFormatter(
             linenos=linenos, noclasses=noclasses,
             font_size=16, style=mystyle, lineseparator="<br>", wrapcode=True)
