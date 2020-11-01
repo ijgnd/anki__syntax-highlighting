@@ -364,8 +364,8 @@ wrapcode
         # out = "`" + json.dumps(pretty_code)[1:-1] + "`"
         ed.web.eval("MyInsertHtml(%s);" % out)
     else:
+        # setFormat is a thin wrapper in Anki around document.execCommand
         ed.web.eval("setFormat('inserthtml', %s);" % json.dumps(pretty_code))
-        # ed.web.eval("document.execCommand('inserthtml', false, %s);" % json.dumps(pretty_code))
     LASTUSED = langAlias
 
 
