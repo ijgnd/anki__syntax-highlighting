@@ -286,7 +286,11 @@ wrapcode
         return False
 
     pygmntd = highlight(code, my_lexer, my_formatter).rstrip()
-    pygmntd = pygmntd.replace('line-height: 125%;', '')  # 'line-height: 100%')
+    # when using noclasses/inline styling pygments adds line-height 125%, see
+    # see https://github.com/pygments/pygments/blob/2fe2152377e317fd215776b6d7467bda3e8cda28/pygments/formatters/html.py#L269
+    # It's seems to be only relevant for IE and makes the line numbers misaligned on my PC. So I remove it.
+    if noclasses:
+        pygmntd = pygmntd.replace('line-height: 125%;', '')
     if inline:
         pretty_code = "".join([pygmntd, "<br>"])
         replacements = {
