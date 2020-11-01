@@ -276,9 +276,19 @@ filename
 wrapcode
     Wrap the code inside <pre> blocks using <code>, as recommended by the HTML5 specification.
         """
+        tablestyling = ""
+        if noclasses:
+            tablestyling += "text-align: left;"
         my_formatter = HtmlFormatter(
-            linenos=linenos, noclasses=noclasses,
-            font_size=16, style=mystyle, lineseparator="<br>", wrapcode=True)
+            cssclass=f"shf__{mystyle}__highlight",
+            cssstyles=tablestyling,
+            font_size=16,
+            linenos=linenos, 
+            lineseparator="<br>",
+            nobackground=False,  # True would solve night mode problem without any config (as long as no line numbers are used)
+            noclasses=noclasses,
+            style=mystyle,
+            wrapcode=True)
     except ClassNotFound as e:
         print(e)
         print(ERR_STYLE)
@@ -318,44 +328,51 @@ wrapcode
         # https://github.com/glutanimate/syntax-highlighting/commit/afbf5b3792611ecd2207b9975309d05de3610d45
         # which hasn't been published on Ankiweb in 2019-10-02.
         else:
-            pretty_code = "".join(["<table><tbody><tr><td>",
+            pretty_code = "".join([f'<table class="shf__{mystyle}__highlighttable"><tbody><tr><td>',
                                     pygmntd,
                                     "</td></tr></tbody></table><br>"])
-        soup = BeautifulSoup(pretty_code, 'html.parser')
-        tablestyling = ""
-        if centerfragments:
-            tablestyling += "margin: 0 auto;"
-        if noclasses:
-            tablestyling += "text-align: left;"
-        for t in soup.findAll("table"):
-            if tablestyling:
-                if t.has_attr('style'):
-                    t['style'] = tablestyling + t['style']
-                else:
-                    t['style'] = tablestyling
-            if noclasses:
-                if t.has_attr('class'):
-                    # del t["class"]   # class tablehighlight
-                    t["class"] = [f"shf__{mystyle}__tablehighlight", ]
-        if noclasses:
-            for d in soup.find_all(attrs={'class': 'highlight'}):
-                # thestyle = d['style']
-                # del d["class"]
-                d["class"] = [f"shf__{mystyle}__highlight", ]
-            for d in soup.find_all("td"):
-                if t.has_attr('class'):
-                    # del d["class"]
-                    d["class"] = [f'''shf__{mystyle}__{d["class"][0]}''', ]
-            for d in soup.find_all(attrs={'class': 'linenodiv'}):
-                # even for dark styles pygments uses a bright background color for the line numbers
-                # In Night mode you then have unreadable white text on white background
-                d['style'] = """background-color: transparent;"""
-                # del d["class"]
-                d["class"] = [f"shf__{mystyle}__linenodiv", ]
-            if gc('font'):
+        """
+        I can't solely rely on the pygments-HTMLFormatter
+        A lot of the stuff I did before 2020-11 with bs4 can indeed be done by adjusting
+        the HTMLFormatter options:
+        - I can override the ".card {text-align: center}" by using the option "cssstyles"
+          (Inline CSS styles for the wrapping <div> tag).
+        - I can set a custom class by adjusting the option "cssclass" which defaults to "highlight"
+          Besides this there are the classes linenos and linenodiv. BUT I don't need to customize 
+          the latter classes. I can also work with longer css rules: 
+             /*syntax highlighting fork add-on: dark background*/
+             .night_mode .shf__default__highlight{
+             background-color: #222222 !important;
+             }
+             /*syntax highlighting fork add-on: line numbers: white on black: sometimes a span is used, sometimes not*/
+             .night_mode .shf__default__highlighttable tr td.linenos div.linenodiv pre span {
+             background-color: #222222 !important;
+             color: #f0f0f0 !important;
+             }
+             .night_mode .shf__default__highlighttable tr td.linenos div.linenodiv pre {
+             background-color: #222222 !important;
+             color: #f0f0f0 !important;
+             }
+        BUT as far as I see I can't set inline styling for the surrounding table. But to center the
+        table I need to add something like "margin: 0 auto;". If you rely on css it's easy because
+        the "the wrapping table will have a CSS class of [the cssclass] string plus 'table', the 
+        default is accordingly 'highlighttable'.". But my option should work without the user
+        adjusting each template and the editor.
+        I also need to set the font.
+        """
+        if centerfragments or (noclasses and gc('font')):
+            soup = BeautifulSoup(pretty_code, 'html.parser')
+            if centerfragments:
+                tablestyling = "margin: 0 auto;"
+                for t in soup.findAll("table"):
+                    if t.has_attr('style'):
+                        t['style'] = tablestyling + t['style']
+                    else:
+                        t['style'] = tablestyling
+            if noclasses and gc('font'):
                 for t in soup.findAll("code"):
                     t['style'] = "font-family: %s;" % gc('font')
-        pretty_code = str(soup)
+            pretty_code = str(soup)
     if noclasses:
         out = json.dumps(pretty_code).replace('\n', ' ').replace('\r', '')
         # In 2020-05 I don't remember why I used backticks/template literals 
