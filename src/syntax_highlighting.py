@@ -398,9 +398,9 @@ def _openHelperMenu(editor, code, selected_text):
         # TODO: Do I really need the custom code, couldn't I just wrap in newer versions
         # as with the mini format pack, see https://github.com/glutanimate/mini-format-pack/pull/13/commits/725bb8595631e4dbc56bf881427aeada848e43c9
         m_pre = menu.addAction("&unformatted (<pre>)")
-        m_pre.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "pre"))
+        m_pre.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, tag="pre", class_name="shf_pre"))
         m_cod = menu.addAction("unformatted (<&code>)")
-        m_cod.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, "code"))
+        m_cod.triggered.connect(lambda _, a=editor, c=code: wrap_in_tags(a, c, tag="code", class_name="shf_code"))
 
     defla = get_default_lang(editor)
     if defla in LANG_MAP:
