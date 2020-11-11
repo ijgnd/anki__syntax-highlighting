@@ -83,6 +83,13 @@ def update_templates(templatenames):
                 mw.col.models.save(model, templates=True)
 
 
+def styles_that_need_css():
+    styles_to_set = []
+    for s in get_all_styles():
+        if mw.col.find_cards(f"shf__{s}__highlight"):
+            styles_to_set.append(s)
+    return styles_to_set
+
 
 # font_for_line_numbers
 css_to_set_font_for_line_numbers = """
@@ -95,17 +102,30 @@ css_to_set_font_for_line_numbers = """
 }}
 """
 
-def update_cssfile_in_mediafolder(style):
+
+def css_for_style(style, also_default_highlight_class=False):
     template_file = os.path.join(css_templates_folder, style + ".css")
     with open(template_file) as f:
         css = f.read()
+    font = gc("font", "Droid Sans Mono")
+    withfonts = css % (font, font, font)
+    withstyles = withfonts.replace(".highlight", f".shf__{style}__highlight")
+    line_number_fix = css_to_set_font_for_line_numbers.format(style=style, font=font)
+    final = withstyles + "\n\n\n" + line_number_fix 
+    if also_default_highlight_class:
+        final += "\n\n\n" + withfonts
+    return final
+
+
+def update_cssfile_in_mediafolder(style):
+    css = css_for_style(style, True)
+    also_include = styles_that_need_css()
+    if style in also_include:
+        also_include.remove(style)
+    for s in also_include:
+        css += "\n\n\n\n\n" + css_for_style(s)
     with open(css_file_in_media, "w") as f:
-        font = gc("font", "Droid Sans Mono")
-        withfonts = css % (font, font, font)
-        withstyles = withfonts.replace(".highlight", f".shf__{style}__highlight")
-        line_number_fix = css_to_set_font_for_line_numbers.format(style=style, font=font)
-        # for compatibiltiy with releases before 2020-11 I also need the default class names
-        f.write(withstyles + "\n\n\n" + line_number_fix + "\n\n\n" + withfonts)
+        f.write(css)
 
 
 def onMySettings():
@@ -295,8 +315,12 @@ wrapcode
         tablestyling = ""
         if noclasses:
             tablestyling += "text-align: left;"
+        if gc("cssclasses") and not gc("css_custom_class_per_style"):
+            css_class = "highlight"  # the default for pygments
+        else:
+            css_class = f"shf__{mystyle}__highlight"
         my_formatter = HtmlFormatter(
-            cssclass=f"shf__{mystyle}__highlight",
+            cssclass=css_class,
             cssstyles=tablestyling,
             font_size=16,
             linenos=linenos, 
@@ -344,7 +368,7 @@ wrapcode
         # https://github.com/glutanimate/syntax-highlighting/commit/afbf5b3792611ecd2207b9975309d05de3610d45
         # which hasn't been published on Ankiweb in 2019-10-02.
         else:
-            pretty_code = "".join([f'<table class="shf__{mystyle}__highlighttable"><tbody><tr><td>',
+            pretty_code = "".join([f'<table class="{css_class}"><tbody><tr><td>',
                                     pygmntd,
                                     "</td></tr></tbody></table><br>"])
         """

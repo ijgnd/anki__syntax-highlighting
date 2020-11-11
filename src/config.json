@@ -1,6 +1,7 @@
 {
     "centerfragments": false,
     "cssclasses": false,
+    "css_custom_class_per_style": false,
     "defaultlangperdeck": false,
     "deckdefaultlang": {},
     "defaultlang": "Python",

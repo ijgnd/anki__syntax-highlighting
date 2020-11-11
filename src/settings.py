@@ -151,6 +151,7 @@ class MyConfigWindow(QDialog):
             self.dialog.lab_Font_selected.setText(self.config['font'])
         self.dialog.lab_style_selected.setText(self.config['style'])
         self.dialog.ql_deflang.setText(self.config['defaultlang'])
+        self.dialog.cb_one_class_per_style.setChecked(self.config.get("css_custom_class_per_style", False)) 
 
     def settable(self, listwidget, _list):
         listwidget.clear()
@@ -245,6 +246,7 @@ class MyConfigWindow(QDialog):
             "show pre/code": self.dialog.cb_showPreCode.isChecked(),
             "centerfragments": self.dialog.cb_center.isChecked(),
             "cssclasses": self.dialog.cb_usecss.isChecked(),
+            "css_custom_class_per_style": self.dialog.cb_one_class_per_style.isChecked(),
             "defaultlangperdeck": self.dialog.cb_defaultlangperdeck.isChecked(),
             "deckdefaultlang": defaultdict,
             "defaultlang": self.dialog.ql_deflang.text(),
