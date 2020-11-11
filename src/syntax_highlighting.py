@@ -87,7 +87,7 @@ def update_templates(templatenames):
             else:
                 model = mw.col.models.get(m['id'])
                 model['css'] = line + "\n\n" + model['css']
-                mw.col.models.save(model, templates=True)
+                mw.col.models.save(model)
 
 
 def styles_that_need_css():
