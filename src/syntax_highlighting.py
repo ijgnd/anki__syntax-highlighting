@@ -76,8 +76,15 @@ addHook("profileLoaded", profileLoaded)
 def update_templates(templatenames):
     for m in mw.col.models.all():
         if m['name'] in templatenames:
-            line = """@import url("_styles_for_syntax_highlighting.css");"""
-            if line not in m['css']:
+            # https://github.com/trgkanki/cloze_hide_all/issues/43
+            lines = [
+                """@import url("_styles_for_syntax_highlighting.css");""",
+                """@import url(_styles_for_syntax_highlighting.css);""",
+            ]
+            for l in lines:
+                if l in m['css']:
+                    break
+            else:
                 model = mw.col.models.get(m['id'])
                 model['css'] = line + "\n\n" + model['css']
                 mw.col.models.save(model, templates=True)
