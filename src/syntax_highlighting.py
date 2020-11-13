@@ -377,7 +377,7 @@ wrapcode
         # https://github.com/glutanimate/syntax-highlighting/commit/afbf5b3792611ecd2207b9975309d05de3610d45
         # which hasn't been published on Ankiweb in 2019-10-02.
         else:
-            pretty_code = "".join([f'<table class="{css_class}"><tbody><tr><td>',
+            pretty_code = "".join([f'<table class="{css_class}table"><tbody><tr><td>',
                                     pygmntd,
                                     "</td></tr></tbody></table><br>"])
         """
