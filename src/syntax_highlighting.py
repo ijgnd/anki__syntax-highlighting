@@ -86,7 +86,7 @@ def update_templates(templatenames):
                     break
             else:
                 model = mw.col.models.get(m['id'])
-                model['css'] = line + "\n\n" + model['css']
+                model['css'] = l + "\n\n" + model['css']
                 mw.col.models.save(model)
 
 
