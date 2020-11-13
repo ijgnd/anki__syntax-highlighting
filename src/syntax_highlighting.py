@@ -141,9 +141,11 @@ def onMySettings():
     dialog.raise_()
     if dialog.exec_():
         mw.addonManager.writeConfig(__name__, dialog.config)
+        mw.progress.start(immediate=True)
         if hasattr(dialog, "templates_to_update"):
             update_templates(dialog.templates_to_update)
         update_cssfile_in_mediafolder(dialog.config["style"])
+        mw.progress.finish()
         showInfo("You need to restart Anki so that all changes take effect.")
 mw.addonManager.setConfigAction(__name__, onMySettings)
 
